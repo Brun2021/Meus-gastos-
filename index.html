@@ -69,7 +69,7 @@ section{animation:fi .28s ease}@keyframes fi{from{opacity:0;transform:translateY
 .lm{min-height:20px;font-size:13px;color:#fecdd3;margin-bottom:8px}
 .pad{display:grid;grid-template-columns:repeat(3,76px);gap:14px 22px;justify-content:center;margin-top:6px}.pad button{width:76px;height:76px;border-radius:50%;background:#ffffff17;border:1px solid #ffffff22;color:#fff;font-size:28px;font-weight:500;padding:0;transition:background .12s}.pad button:active{background:#ffffff45}.pad .nb{background:transparent}
 .lk .lnk{background:none;color:#ffffffcc;font-weight:500;margin-top:22px;font-size:14px;text-decoration:underline;padding:8px}
-.lf{width:100%;display:grid;gap:10px;margin-bottom:12px}.lf input{width:100%;font-size:16px;padding:14px;border-radius:14px;background:#ffffff1f;border:1px solid #ffffff40;color:#fff}.lf input::placeholder{color:#fffa}.lf input:focus{outline:0;border-color:#fff;box-shadow:0 0 0 4px #ffffff26}#lkc{width:100%;background:#fff;color:#0f766e;padding:15px;border-radius:14px;font-weight:700;box-shadow:0 8px 20px #00000033;transition:opacity .15s}#lkc:disabled{opacity:.5;box-shadow:none}
+.lf{width:100%;display:grid;gap:10px;margin-bottom:12px}.lf input{width:100%;font-size:16px;padding:14px;border-radius:14px;background:#ffffff1f;border:1px solid #ffffff40;color:#fff}.lf input::placeholder{color:#fffa}.lf input:focus{outline:0;border-color:#fff;box-shadow:0 0 0 4px #ffffff26}#lkc,#lkv{width:100%;background:#fff;color:#0f766e;padding:15px;border-radius:14px;font-weight:700;box-shadow:0 8px 20px #00000033;transition:opacity .15s}#lkc:disabled{opacity:.5;box-shadow:none}
 main h2{display:flex;align-items:center;gap:8px}main h2::before{content:"";width:4px;height:15px;border-radius:2px;background:var(--g);flex:none}
 .hero #kbal{font-size:34px}.st>div{text-align:center}.tx .ic{border-radius:14px}
 .seg button.on{box-shadow:0 4px 12px #0f766e40}
@@ -78,6 +78,7 @@ main h2{display:flex;align-items:center;gap:8px}main h2::before{content:"";width
 .seg[hidden],.nav[hidden]{display:none}.av{overflow:hidden;cursor:pointer}.av img,.pfa img{width:100%;height:100%;object-fit:cover}
 .pfa{width:110px;height:110px;border-radius:50%;margin:0 auto;background:var(--g);color:#fff;display:grid;place-items:center;font-size:44px;font-weight:800;overflow:hidden;box-shadow:0 8px 24px #0f766e55}
 .pf{display:grid;gap:12px}.pf label{display:grid;gap:5px;font-size:13px;color:var(--mut);font-weight:600}.pf input{width:100%;font-size:15px;font-weight:400;color:var(--tx)}
+#lko{width:100%;text-align:center;letter-spacing:.5em;font-size:22px;padding:14px;border-radius:14px;background:#ffffff1f;border:1px solid #ffffff40;color:#fff;margin-bottom:12px}#lko::placeholder{letter-spacing:0;font-size:15px;color:#fffa}#lko:focus{outline:0;border-color:#fff;box-shadow:0 0 0 4px #ffffff26}
 </style>
 </head>
 <body>
@@ -123,8 +124,9 @@ main h2{display:flex;align-items:center;gap:8px}main h2::before{content:"";width
 <div class="row"><input id="dt" type="date"><input id="nt" placeholder="Nota (opcional)"></div>
 <div class="row"><button class="g" id="cx">Cancelar</button><button id="sv">Guardar</button></div></div></div>
 <div id="ps" hidden>🔒 Meus Gastos</div>
+<div class="md" id="cf" hidden style="z-index:60"><div class="sh"><p id="cft" style="margin:6px 0 4px;font-size:15px;line-height:1.5"></p><div class="row"><button class="g" id="cfn">Cancelar</button><button id="cfy">OK</button></div></div></div>
 <div class="lk" id="lk" hidden><div class="li"><div class="lo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a2 2 0 0 1 2 2v1.5"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H5.5A2.5 2.5 0 0 1 3 6.5"/><circle cx="16.5" cy="14" r="1.2" fill="#fff"/></svg></div><div class="br">Meus Gastos</div><h2 id="lkt"></h2><p id="lks"></p><div class="stp" id="stp"><i></i><i></i><i></i></div>
-<div class="lf" id="lkf"><input id="lkn" placeholder="Nome completo" maxlength="60" autocomplete="name" autocapitalize="words"><input id="lka" placeholder="Morada" maxlength="100" autocomplete="street-address"><input id="lkbi" placeholder="N.º do Bilhete de Identidade" maxlength="20" autocapitalize="characters" autocomplete="off"><input id="lke" type="email" inputmode="email" placeholder="E-mail" maxlength="80" autocomplete="email"><input id="lkp" type="tel" inputmode="tel" placeholder="Telefone" maxlength="20" autocomplete="tel" enterkeyhint="go"></div><button id="lkc">Continuar</button>
+<div class="lf" id="lkf"><input id="lkn" placeholder="Nome completo" maxlength="60" autocomplete="name" autocapitalize="words"><input id="lka" placeholder="Morada" maxlength="100" autocomplete="street-address"><input id="lkbi" placeholder="N.º do Bilhete de Identidade" maxlength="20" autocapitalize="characters" autocomplete="off"><input id="lke" type="email" inputmode="email" placeholder="E-mail" maxlength="80" autocomplete="email"><input id="lkp" type="tel" inputmode="tel" placeholder="Telefone" maxlength="20" autocomplete="tel" enterkeyhint="go"></div><button id="lkc">Continuar</button><input id="lko" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Código de 6 dígitos" hidden><button id="lkv" hidden>Verificar código</button><button class="lnk" id="lkr" hidden>Reenviar código</button>
 <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div><div class="lm" id="lkm"></div><div class="pad" id="pad"></div>
 <button class="lnk" id="fg"></button></div></div>
 <script>
@@ -242,36 +244,47 @@ document.querySelectorAll(".pdfb").forEach(function(b){b.onclick=genPdf});
 function dl(b,n){var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();setTimeout(function(){a.remove();URL.revokeObjectURL(a.href)},1500)}
 function csvx(){var q=function(v){v=String(v==null?"":v);if(/^[=+\-@]/.test(v))v="'"+v;return'"'+v.replace(/"/g,'""')+'"'},r=["Data;Tipo;Categoria;Conta;Valor;Nota"];S.tx.slice().sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:a.id-b.id}).forEach(function(x){r.push([x.d,x.t=="e"?"Entrada":"Saída",q(x.c),q(x.k),String(x.v).replace(".",","),q(x.n)].join(";"))});dl(new Blob(["\ufeff"+r.join("\r\n")],{type:"text/csv;charset=utf-8"}),"meus-gastos-"+iso(new Date())+".csv")}
 $("csv").onclick=csvx;
+var cfb=null;function ask(m,f,ok){$("cft").textContent=m;$("cfy").textContent=ok||"OK";cfb=f;$("cf").hidden=false}
+$("cfn").onclick=function(){$("cf").hidden=true;cfb=null};$("cfy").onclick=function(){$("cf").hidden=true;var f=cfb;cfb=null;if(f)f()};
+/* OTP por e-mail (EmailJS): preencher os 3 campos para ativar */
+var OTP={svc:"service_u12e0q9",tpl:"template_olnmacj",key:"MVIvd7IMT0tbMf78m"},otpP="reg",otpL=0,otpE="";
+function otpOn(){return!!(OTP.svc&&OTP.tpl&&OTP.key)}
+function otpSend(e,n){var P=otpP=="reg"&&S.rg?S.rg:(S.prof||{}),w=Date.now()-otpL;if(w<60000)return Promise.reject(new Error("Aguarda "+Math.ceil((60000-w)/1000)+" s para reenviar."));var a=new Uint32Array(1);crypto.getRandomValues(a);var c=String(100000+a[0]%900000);otpL=Date.now();
+return hp("otp"+c).then(function(h){return fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service_id:OTP.svc,template_id:OTP.tpl,user_id:OTP.key,template_params:{to_email:e,to_name:n||"",code:c,nome:P.nome||"",email:P.email||e,tel:P.tel||"",bi:P.bi?"****"+P.bi.slice(-4):""}})}).then(function(r){if(!r.ok)throw new Error("Não foi possível enviar o e-mail.");S.otp={h:h,t:Date.now()+600000,n:0};save()})}).catch(function(x){otpL=0;throw new Error(x instanceof TypeError?"Sem ligação. Tenta de novo.":x.message)})}
+function otpGo(e,n,p){otpE=e;otpP=p;$("lkm").textContent="A enviar código…";otpSend(e,n).then(function(){stage="otp";lkUI();$("lko").value="";$("lko").focus()}).catch(function(x){$("lkm").textContent=x.message})}
+$("lkv").onclick=function(){var c=$("lko").value.trim(),o=S.otp;if(!o||Date.now()>o.t){$("lkm").textContent="Código expirado. Toca em Reenviar.";return}if(o.n>=5){$("lkm").textContent="Demasiadas tentativas. Pede novo código.";return}o.n++;save();hp("otp"+c).then(function(h){if(h!==o.h){$("lkm").textContent="Código incorreto.";return}delete S.otp;if(otpP!="reset"&&S.rg){S.prof=Object.assign(S.prof||{},S.rg);S.name=S.rg.nome;S.vf=1;delete S.rg}save();stage="new";lkUI()})};
+$("lkr").onclick=function(){otpSend(otpE||(S.rg&&S.rg.email),S.name||(S.rg&&S.rg.nome)).then(function(){$("lkm").textContent="Código reenviado."}).catch(function(x){$("lkm").textContent=x.message})};
+$("lko").onkeydown=function(e){if(e.key=="Enter")$("lkv").click()};
 $("fab").onclick=function(){openM()};$("cx").onclick=function(){$("md").hidden=true};
 $("tp").onchange=cats;
 $("sv").onclick=function(){var v=parseFloat($("vl").value);if(!(v>0)){$("vl").focus();return}
 var o={id:eid||Date.now(),t:$("tp").value,v:v,c:$("ct").value,k:$("cd").value,d:$("dt").value||iso(new Date()),n:$("nt").value.trim()};
 if(eid)S.tx=S.tx.map(function(x){return x.id==eid?o:x});else S.tx.push(o);save();$("md").hidden=true;render()};
-$("list").onclick=function(e){var d=e.target.dataset;if(d.x&&confirm("Apagar este registo?")){S.tx=S.tx.filter(function(x){return x.id!=d.x});save();render()}
+$("list").onclick=function(e){var d=e.target.dataset;if(d.x)ask("Apagar este registo?",function(){S.tx=S.tx.filter(function(x){return x.id!=d.x});save();render()},"Apagar");
 if(d.e){openM(S.tx.filter(function(x){return x.id==d.e})[0])}};
 $("q").oninput=render;$("fc").onchange=render;
 $("ac").onclick=function(){var n=$("nc").value.trim();if(n&&!S.cards.some(function(c){return c.n==n})){S.cards.push({n:n,t:$("nt2").value,l:+$("nl").value||0});$("nc").value="";$("nl").value="";save();fill();render()}};
-$("cards").onclick=function(e){var i=e.target.dataset.d;if(i!=null&&S.cards.length>1&&confirm("Remover este cartão? Os registos ficam guardados.")){S.cards.splice(+i,1);save();fill();render()}};
+$("cards").onclick=function(e){var i=e.target.dataset.d;if(i!=null&&S.cards.length>1)ask("Remover este cartão? Os registos ficam guardados.",function(){S.cards.splice(+i,1);save();fill();render()},"Remover")};
 $("orl").onchange=function(e){var c=e.target.dataset.b;if(c){S.bud[c]=+e.target.value||0;save();render()}};
 document.querySelectorAll(".seg button").forEach(function(b){b.onclick=function(){per=b.dataset.p;off=0;render()}});
 document.querySelectorAll(".bn button").forEach(function(b){b.onclick=function(){tab=b.dataset.t;render();scrollTo(0,0)}});
 $("pv").onclick=function(){off--;render()};$("nx").onclick=function(){off++;render()};
 $("cur").value=S.cur;$("cur").onchange=function(){S.cur=$("cur").value||"Kz";save();render()};
 $("gb").onclick=function(){var t=$("bk");var cp=Object.assign({},S);delete cp.pin;t.value=JSON.stringify(cp);t.select();dl(new Blob([t.value],{type:"application/json"}),"meus-gastos-backup-"+iso(new Date())+".json");try{navigator.clipboard.writeText(t.value);$("bm").textContent="Backup gerado e copiado."}catch(e){$("bm").textContent="Backup gerado. Copia o texto."}};
-$("rb").onclick=function(){try{var o=JSON.parse($("bk").value);if(!o.tx)throw 0;if(!confirm("Substituir os dados deste aparelho?"))return;var pk=S.pin,pn=S.name;S=o;S.pin=pk;if(!S.name)S.name=pn;norm();save();fill();$("cur").value=S.cur;$("bm").textContent="Restaurado!";render()}catch(e){$("bm").textContent="Backup inválido."}};
+$("rb").onclick=function(){var o;try{o=JSON.parse($("bk").value);if(!o.tx)throw 0}catch(e){$("bm").textContent="Backup inválido.";return}ask("Substituir os dados deste aparelho?",function(){var pk=S.pin,pn=S.name;S=o;S.pin=pk;if(!S.name)S.name=pn;norm();save();fill();$("cur").value=S.cur;$("bm").textContent="Restaurado!";render()},"Substituir")};
 var buf="",stage="in",tmp="",fails=0,lockUntil=(function(){try{return+localStorage.getItem("gastos_lk")||0}catch(e){return 0}})(),chg=false,hid=0;
 function hp(p){var t="mg:"+p;if(window.crypto&&crypto.subtle&&window.TextEncoder)return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")});var h=5381;for(var i=0;i<t.length;i++)h=(h*33^t.charCodeAt(i))>>>0;return Promise.resolve("d"+h)}
 function gt(){var h=new Date().getHours();return h<12?"Bom dia":h<19?"Boa tarde":"Boa noite"}
 function hdr(){var n=S.name||"",p=S.prof||{};$("nm").textContent=n.split(" ")[0]||"Olá";if(p.foto)$("av").innerHTML='<img alt="Perfil" src="'+p.foto+'">';else $("av").textContent=(n.charAt(0)||"👤").toUpperCase();$("gt").textContent=gt()}
 function dots(){[].forEach.call($("dots").children,function(e,i){e.className=i<buf.length?"f":""})}
 function lkUI(){buf="";dots();$("lkm").textContent="";var st=stage,nm=(S.name||"").split(" ")[0];
-$("lkf").hidden=$("lkc").hidden=st!="name";$("dots").hidden=$("pad").hidden=st=="name";
-$("lkt").textContent={name:"Bem-vindo",new:"Cria o teu PIN",conf:"Confirma o PIN",chk:"PIN atual","in":gt()+(nm?", "+nm:"")}[st];
-$("lks").textContent={name:"Preenche os teus dados para criar a conta. Depois defines um PIN de 4 dígitos.",new:"Escolhe 4 dígitos para entrar na app.",conf:"Introduz o PIN outra vez.",chk:"Introduz o PIN atual para continuar.","in":"Introduz o teu PIN para entrar."}[st];
-var sn={name:0,new:1,conf:2}[st];$("stp").hidden=sn==null;[].forEach.call($("stp").children,function(e,i){e.className=i<=sn?"on":""});
-$("fg").textContent=chg?"Cancelar":"Esqueci-me do PIN";$("fg").hidden=!(st=="in"||chg)}
+$("lkf").hidden=$("lkc").hidden=st!="name";if(st=="name"&&S.rg)["lkn","lka","lkbi","lke","lkp"].forEach(function(i,k){$(i).value=$(i).value||[S.rg.nome,S.rg.morada,S.rg.bi,S.rg.email,S.rg.tel][k]||""});$("dots").hidden=$("pad").hidden=st=="name"||st=="otp";
+$("lkt").textContent={name:"Bem-vindo",otp:"Confirma o e-mail",new:"Cria o teu PIN",conf:"Confirma o PIN",chk:"PIN atual","in":gt()+(nm?", "+nm:"")}[st];
+$("lks").textContent={otp:"Introduz o código de 6 dígitos enviado para "+otpE+".",name:"Preenche os teus dados. Vamos enviar um código de confirmação para o teu e-mail e depois defines um PIN de 4 dígitos.",new:"Escolhe 4 dígitos para entrar na app.",conf:"Introduz o PIN outra vez.",chk:"Introduz o PIN atual para continuar.","in":"Introduz o teu PIN para entrar."}[st];
+var sn={name:0,otp:0,new:1,conf:2}[st];$("stp").hidden=sn==null;[].forEach.call($("stp").children,function(e,i){e.className=i<=sn?"on":""});
+$("fg").textContent=chg?"Cancelar":"Esqueci-me do PIN";$("fg").hidden=!(st=="in"||chg);$("lko").hidden=$("lkv").hidden=$("lkr").hidden=st!="otp";if(st=="otp"){$("fg").textContent="Voltar";$("fg").hidden=false}}
 function lkOpen(st,c){stage=st;chg=!!c;$("lk").hidden=false;lkUI()}
-function lkShow(){lkOpen(S.pin?"in":(S.prof&&S.prof.bi?"new":"name"))}
+function lkShow(){if(S.rg)otpE=S.rg.email;lkOpen(S.pin?"in":(S.prof&&S.prof.bi&&S.vf?"new":(S.rg?"otp":"name")));if(stage=="otp"&&(!S.otp||Date.now()>S.otp.t))$("lkm").textContent="Código expirado. Toca em Reenviar."}
 function unlock(){$("lk").hidden=true;buf="";fails=0;chg=false;hdr();render()}
 function shake(m){$("lkm").textContent=m;$("dots").classList.add("sk");setTimeout(function(){$("dots").classList.remove("sk");buf="";dots()},450)}
 function kp(d){if(Date.now()<lockUntil){$("lkm").textContent="Aguarda "+Math.ceil((lockUntil-Date.now())/1000)+" s.";return}if(buf.length>=4)return;buf+=d;dots();if(buf.length==4)setTimeout(done,120)}
@@ -283,16 +296,18 @@ var pd="";"123456789".split("").forEach(function(d){pd+='<button data-d="'+d+'">
 $("pad").onclick=function(e){var d=e.target.dataset.d;if(d==null)return;if(d=="b"){buf=buf.slice(0,-1);dots()}else kp(d)};
 function vp(v){if(v.nome.split(/\s+/).length<2)return"Escreve o nome completo (nome e apelido).";if(v.morada.length<5)return"Indica a morada.";if(!/^[A-Z0-9]{9,16}$/.test(v.bi))return"N.º do BI inválido.";if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.email))return"E-mail inválido.";if(!/^\+?[\d\s]{9,16}$/.test(v.tel))return"Telefone inválido.";return""}
 function gv(a){var g=function(i){return $(i).value.trim()};return{nome:g(a[0]),morada:g(a[1]),bi:g(a[2]).replace(/\s/g,"").toUpperCase(),email:g(a[3]),tel:g(a[4])}}
-$("lkc").onclick=function(){var v=gv(["lkn","lka","lkbi","lke","lkp"]),m=vp(v);if(m){$("lkm").textContent=m;return}S.prof=Object.assign(S.prof||{},v);S.name=v.nome;save();stage="new";lkUI()};
+$("lkc").onclick=function(){var v=gv(["lkn","lka","lkbi","lke","lkp"]),m=vp(v);if(m){$("lkm").textContent=m;return}if(!otpOn()){$("lkm").textContent="Confirmação por e-mail indisponível de momento. Tenta mais tarde.";return}S.rg=v;save();otpGo(v.email,v.nome,"reg")};
 function pfA(){var p=S.prof||{},f=p.foto;$("pfa").innerHTML=f?'<img alt="Foto de perfil" src="'+f+'">':esc(((p.nome||S.name||"").charAt(0)||"👤").toUpperCase());$("pfr").hidden=!f;$("pfb").textContent=f?"📷 Alterar foto":"📷 Adicionar foto"}
 function pfR(){var p=S.prof||{};pfA();$("pfn").value=p.nome||S.name||"";$("pfd").value=p.morada||"";$("pfi").value=p.bi||"";$("pfe").value=p.email||"";$("pft").value=p.tel||"";$("pfm").textContent=""}
 $("pfb").onclick=function(){$("pff").click()};
 $("pff").onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var z=256,c=document.createElement("canvas"),m=Math.min(im.width,im.height);c.width=c.height=z;c.getContext("2d").drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,z,z);S.prof=S.prof||{};S.prof.foto=c.toDataURL("image/jpeg",.82);save();pfA();hdr()};im.src=r.result};r.readAsDataURL(f);this.value=""};
-$("pfr").onclick=function(){if(S.prof&&confirm("Remover a foto?")){delete S.prof.foto;save();pfA();hdr()}};
+$("pfr").onclick=function(){if(S.prof)ask("Remover a foto?",function(){delete S.prof.foto;save();pfA();hdr()},"Remover")};
 $("pfs").onclick=function(){var v=gv(["pfn","pfd","pfi","pfe","pft"]),m=vp(v);if(m){$("pfm").className="o";$("pfm").textContent=m;return}S.prof=Object.assign(S.prof||{},v);S.name=v.nome;save();hdr();$("pfm").className="i";$("pfm").textContent="Perfil guardado ✓"};
-$("fg").onclick=function(){if(chg){chg=false;$("lk").hidden=true;return}
-if(confirm("Para redefinir o PIN é preciso apagar todos os dados guardados neste aparelho (a menos que tenhas um backup para restaurar). Continuar?")){S={tx:[],cards:[{n:"Dinheiro",t:"Dinheiro",l:0}],cur:S.cur||"Kz",bud:{}};save();fill();render();["lkn","lka","lkbi","lke","lkp"].forEach(function(i){$(i).value=""});lkOpen("name")}};
-document.addEventListener("keydown",function(e){if($("lk").hidden||stage=="name")return;if(/^\d$/.test(e.key))kp(e.key);else if(e.key=="Backspace"){buf=buf.slice(0,-1);dots()}});
+$("fg").onclick=function(){if(stage=="otp"){stage=otpP=="reset"?"in":"name";lkUI();return}
+if(chg){chg=false;$("lk").hidden=true;return}
+var em=(S.prof||{}).email;if(otpOn()&&em){otpGo(em,S.name,"reset");return}
+ask("Para redefinir o PIN é preciso apagar todos os dados guardados neste aparelho (a menos que tenhas um backup para restaurar). Continuar?",function(){S={tx:[],cards:[{n:"Dinheiro",t:"Dinheiro",l:0}],cur:S.cur||"Kz",bud:{}};save();fill();render();["lkn","lka","lkbi","lke","lkp"].forEach(function(i){$(i).value=""});lkOpen("name")},"Apagar tudo")};
+document.addEventListener("keydown",function(e){if($("lk").hidden||stage=="name"||stage=="otp")return;if(/^\d$/.test(e.key))kp(e.key);else if(e.key=="Backspace"){buf=buf.slice(0,-1);dots()}});
 document.addEventListener("visibilitychange",function(){if(document.hidden)hid=Date.now();else if(S.pin&&hid&&Date.now()-hid>20000&&$("lk").hidden)lkOpen("in")});
 $("lkb2").onclick=function(){lkOpen("in")};$("bl").onclick=function(){lkOpen("in")};$("cp").onclick=function(){lkOpen("chk",true)};
 $("gp").onclick=function(){tab="pf";pfR();render();scrollTo(0,0)};$("av").onclick=$("gp").onclick;
