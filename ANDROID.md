@@ -5,7 +5,7 @@ Uma PWA não consegue bloquear capturas. Empacotada como app Android, sim (FLAG_
 ```
 npm init -y
 npm i @capacitor/core @capacitor/cli @capacitor/android
-npx cap init "Meus Gastos" com.pedromavakala.gastos --web-dir www
+npx cap init "Meu Gestor" com.pedromavakala.gastos --web-dir www
 mkdir www && cp index.html manifest.json sw.js icon-*.png www/
 npx cap add android
 npx cap sync
