@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Meus Gastos</title>
+<title>Meu Gestor</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f766e"><meta name="color-scheme" content="light dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Meus Gastos">
+<meta name="apple-mobile-web-app-title" content="Meu Gestor">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 
@@ -123,9 +123,9 @@ main h2{display:flex;align-items:center;gap:8px}main h2::before{content:"";width
 <div class="row"><select id="ct"></select><select id="cd"></select></div>
 <div class="row"><input id="dt" type="date"><input id="nt" placeholder="Nota (opcional)"></div>
 <div class="row"><button class="g" id="cx">Cancelar</button><button id="sv">Guardar</button></div></div></div>
-<div id="ps" hidden>🔒 Meus Gastos</div>
+<div id="ps" hidden>🔒 Meu Gestor</div>
 <div class="md" id="cf" hidden style="z-index:60"><div class="sh"><p id="cft" style="margin:6px 0 4px;font-size:15px;line-height:1.5"></p><div class="row"><button class="g" id="cfn">Cancelar</button><button id="cfy">OK</button></div></div></div>
-<div class="lk" id="lk" hidden><div class="li"><div class="lo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a2 2 0 0 1 2 2v1.5"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H5.5A2.5 2.5 0 0 1 3 6.5"/><circle cx="16.5" cy="14" r="1.2" fill="#fff"/></svg></div><div class="br">Meus Gastos</div><h2 id="lkt"></h2><p id="lks"></p><div class="stp" id="stp"><i></i><i></i><i></i></div>
+<div class="lk" id="lk" hidden><div class="li"><div class="lo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a2 2 0 0 1 2 2v1.5"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H5.5A2.5 2.5 0 0 1 3 6.5"/><circle cx="16.5" cy="14" r="1.2" fill="#fff"/></svg></div><div class="br">Meu Gestor</div><h2 id="lkt"></h2><p id="lks"></p><div class="stp" id="stp"><i></i><i></i><i></i></div>
 <div class="lf" id="lkf"><input id="lkn" placeholder="Nome completo" maxlength="60" autocomplete="name" autocapitalize="words"><input id="lka" placeholder="Morada" maxlength="100" autocomplete="street-address"><input id="lkbi" placeholder="N.º do Bilhete de Identidade" maxlength="20" autocapitalize="characters" autocomplete="off"><input id="lke" type="email" inputmode="email" placeholder="E-mail" maxlength="80" autocomplete="email"><input id="lkp" type="tel" inputmode="tel" placeholder="Telefone" maxlength="20" autocomplete="tel" enterkeyhint="go"></div><button id="lkc">Continuar</button><input id="lko" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Código de 6 dígitos" hidden><button id="lkv" hidden>Verificar código</button><button class="lnk" id="lkr" hidden>Reenviar código</button>
 <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div><div class="lm" id="lkm"></div><div class="pad" id="pad"></div>
 <button class="lnk" id="fg"></button></div></div>
@@ -208,7 +208,7 @@ function Ln(x1,x2,yy){c.push("0.88 0.88 0.88 RG 0.5 w "+x1+" "+yy+" m "+x2+" "+y
 function H(t){if(y<90)np();T(40,y,t,12,1,"#0f766e");y-=8;Ln(40,555,y);y-=16}
 np();B(0,772,595,70,"#0f766e");
 var lab=R.l.charAt(0).toUpperCase()+R.l.slice(1),n=new Date();
-T(40,812,"Meus Gastos",20,1,"#ffffff");T(40,794,"Relatório de gastos · "+lab,10,0,"#ffffff");T(40,780,"Período: "+fd(R.a)+" a "+fd(R.b),9,0,"#ffffff");
+T(40,812,"Meu Gestor",20,1,"#ffffff");T(40,794,"Relatório de gastos · "+lab,10,0,"#ffffff");T(40,780,"Período: "+fd(R.a)+" a "+fd(R.b),9,0,"#ffffff");
 T(555,812,"Gerado em "+fd(iso(n))+" "+String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0"),8.5,0,"#ffffff","r");
 [["Entradas",M.i,"#16a34a"],["Saídas",M.o,"#dc2626"],["Saldo",M.i-M.o,M.i-M.o<0?"#dc2626":"#16a34a"]].forEach(function(k,j){var x=40+j*175;B(x,705,165,50,"#f1f5f4");T(x+10,737,k[0],9,0,"#6b7280");T(x+10,716,kz(k[1]),13,1,k[2])});
 y=680;H("Gastos por categoria");
@@ -223,7 +223,7 @@ function MH(){T(40,y,"Data",8.5,1,"#6b7280");T(105,y,"Descrição",8.5,1,"#6b728
 MH();if(!L.length)T(40,y,"Sem movimentos neste período.",10,0,"#6b7280");
 L.forEach(function(x){if(y<60){np();MH()}var e=x.t=="e",ds=((e&&ICATS.indexOf(x.c)<0)?"Entrada":x.c)+" · "+x.k+(x.n?" · "+x.n:"");
 T(40,y,fd(x.d),9);T(105,y,ds.slice(0,62),9);T(e?470:555,y,(e?"+":"-")+fp(x.v),9,0,e?"#16a34a":"#dc2626","r");y-=15;Ln(40,555,y+10)});
-pg.forEach(function(p,j){c=p;Ln(40,555,38);T(40,26,"Meus Gastos",8,0,"#6b7280");T(555,26,"Página "+(j+1)+" de "+pg.length,8,0,"#6b7280","r")});
+pg.forEach(function(p,j){c=p;Ln(40,555,38);T(40,26,"Meu Gestor",8,0,"#6b7280");T(555,26,"Página "+(j+1)+" de "+pg.length,8,0,"#6b7280","r")});
 var ob=[],N=pg.length,kids=[];
 for(i=0;i<N;i++)kids.push((5+i*2)+" 0 R");
 ob[1]="<</Type/Catalog/Pages 2 0 R>>";ob[2]="<</Type/Pages/Kids["+kids.join(" ")+"]/Count "+N+">>";
@@ -250,7 +250,7 @@ $("cfn").onclick=function(){$("cf").hidden=true;cfb=null};$("cfy").onclick=funct
 var OTP={svc:"service_u12e0q9",tpl:"template_olnmacj",key:"UhSfbmHIBOuWyr31U"},otpP="reg",otpL=0,otpE="";
 function otpOn(){return!!(OTP.svc&&OTP.tpl&&OTP.key)}
 function otpSend(e,n){var P=otpP=="reg"&&S.rg?S.rg:(S.prof||{}),w=Date.now()-otpL;if(w<60000)return Promise.reject(new Error("Aguarda "+Math.ceil((60000-w)/1000)+" s para reenviar."));var a=new Uint32Array(1);crypto.getRandomValues(a);var c=String(100000+a[0]%900000);otpL=Date.now();
-return hp("otp"+c).then(function(h){return fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service_id:OTP.svc,template_id:OTP.tpl,user_id:OTP.key,template_params:{to_email:e,to_name:n||"",code:c,nome:P.nome||"",email:P.email||e,tel:P.tel||"",bi:P.bi?"****"+P.bi.slice(-4):""}})}).then(function(r){if(!r.ok)throw new Error("Não foi possível enviar o e-mail.");S.otp={h:h,t:Date.now()+600000,n:0};save()})}).catch(function(x){otpL=0;throw new Error(x instanceof TypeError?"Sem ligação. Tenta de novo.":x.message)})}
+return hp("otp"+c).then(function(h){return fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service_id:OTP.svc,template_id:OTP.tpl,user_id:OTP.key,template_params:{to_email:e,to_name:n||"",code:c,nome:P.nome||"",email:P.email||e,tel:P.tel||"",bi:P.bi?"****"+P.bi.slice(-4):""}})}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error("Não foi possível enviar o e-mail: "+String(t).slice(0,80))});S.otp={h:h,t:Date.now()+600000,n:0};save()})}).catch(function(x){otpL=0;throw new Error(x instanceof TypeError?"Sem ligação. Tenta de novo.":x.message)})}
 function otpGo(e,n,p){otpE=e;otpP=p;$("lkm").textContent="A enviar código…";otpSend(e,n).then(function(){stage="otp";lkUI();$("lko").value="";$("lko").focus()}).catch(function(x){$("lkm").textContent=x.message})}
 $("lkv").onclick=function(){var c=$("lko").value.trim(),o=S.otp;if(!o||Date.now()>o.t){$("lkm").textContent="Código expirado. Toca em Reenviar.";return}if(o.n>=5){$("lkm").textContent="Demasiadas tentativas. Pede novo código.";return}o.n++;save();hp("otp"+c).then(function(h){if(h!==o.h){$("lkm").textContent="Código incorreto.";return}delete S.otp;if(otpP!="reset"&&S.rg){S.prof=Object.assign(S.prof||{},S.rg);S.name=S.rg.nome;S.vf=1;delete S.rg}save();stage="new";lkUI()})};
 $("lkr").onclick=function(){otpSend(otpE||(S.rg&&S.rg.email),S.name||(S.rg&&S.rg.nome)).then(function(){$("lkm").textContent="Código reenviado."}).catch(function(x){$("lkm").textContent=x.message})};

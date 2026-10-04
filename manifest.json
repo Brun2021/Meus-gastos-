@@ -1,6 +1,6 @@
 {
-  "name": "Meus Gastos",
-  "short_name": "Gastos",
+  "name": "Meu Gestor",
+  "short_name": "Meu Gestor",
   "description": "Controlo de gastos pessoais: diário, semanal e mensal, com cartões, orçamento e gráficos.",
   "id": "./",
   "start_url": "./index.html",
