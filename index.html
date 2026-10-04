@@ -247,7 +247,7 @@ $("csv").onclick=csvx;
 var cfb=null;function ask(m,f,ok){$("cft").textContent=m;$("cfy").textContent=ok||"OK";cfb=f;$("cf").hidden=false}
 $("cfn").onclick=function(){$("cf").hidden=true;cfb=null};$("cfy").onclick=function(){$("cf").hidden=true;var f=cfb;cfb=null;if(f)f()};
 /* OTP por e-mail (EmailJS): preencher os 3 campos para ativar */
-var OTP={svc:"service_u12e0q9",tpl:"template_olnmacj",key:"MVIvd7IMT0tbMf78m"},otpP="reg",otpL=0,otpE="";
+var OTP={svc:"service_u12e0q9",tpl:"template_olnmacj",key:"UhSfbmHIBOuWyr31U"},otpP="reg",otpL=0,otpE="";
 function otpOn(){return!!(OTP.svc&&OTP.tpl&&OTP.key)}
 function otpSend(e,n){var P=otpP=="reg"&&S.rg?S.rg:(S.prof||{}),w=Date.now()-otpL;if(w<60000)return Promise.reject(new Error("Aguarda "+Math.ceil((60000-w)/1000)+" s para reenviar."));var a=new Uint32Array(1);crypto.getRandomValues(a);var c=String(100000+a[0]%900000);otpL=Date.now();
 return hp("otp"+c).then(function(h){return fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service_id:OTP.svc,template_id:OTP.tpl,user_id:OTP.key,template_params:{to_email:e,to_name:n||"",code:c,nome:P.nome||"",email:P.email||e,tel:P.tel||"",bi:P.bi?"****"+P.bi.slice(-4):""}})}).then(function(r){if(!r.ok)throw new Error("Não foi possível enviar o e-mail.");S.otp={h:h,t:Date.now()+600000,n:0};save()})}).catch(function(x){otpL=0;throw new Error(x instanceof TypeError?"Sem ligação. Tenta de novo.":x.message)})}
