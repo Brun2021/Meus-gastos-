@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedro Mavakala — Sistema de Gestão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.25.0/babel.min.js"></script>
+<style>
+  html, body { margin:0; padding:0; background:#0B0E14; }
+  #root { min-height:100vh; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #212B3D; border-radius: 8px; }
+  #boot-fallback {
+    font-family: Arial, sans-serif; color:#F3F5F9; background:#0B0E14; min-height:100vh;
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:32px;
+  }
+</style>
+</head>
+<body>
+
+<div id="root">
+  <div id="boot-fallback">
+    <div>
+      <div style="font-weight:700; font-size:18px; margin-bottom:8px;">A carregar o sistema…</div>
+      <div style="color:#8B93A7; font-size:13px; max-width:360px;">
+        Este ficheiro precisa de ligação à internet na primeira vez que é aberto, para carregar
+        o React a partir de uma CDN. Se esta mensagem não desaparecer, verifique a sua ligação
+        e recarregue a página.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Local storage shim: mirrors the window.storage.get/set API the app uses,
+  // but persists to this browser's localStorage instead of Claude's cloud storage.
+  window.storage = {
+    async get(key, shared) {
+      try {
+        const raw = localStorage.getItem("pm_erp_" + key);
+        if (raw === null) return null;
+        return { key: key, value: raw, shared: !!shared };
+      } catch (e) { throw e; }
+    },
+    async set(key, value, shared) {
+      try {
+        localStorage.setItem("pm_erp_" + key, value);
+        return { key: key, value: value, shared: !!shared };
+      } catch (e) { return null; }
+    },
+    async delete(key, shared) {
+      try {
+        localStorage.removeItem("pm_erp_" + key);
+        return { key: key, deleted: true, shared: !!shared };
+      } catch (e) { return null; }
+    },
+    async list(prefix, shared) {
+      try {
+        const p = "pm_erp_" + (prefix || "");
+        const keys = Object.keys(localStorage).filter(function (k) { return k.indexOf(p) === 0; })
+          .map(function (k) { return k.slice(7); });
+        return { keys: keys, prefix: prefix, shared: !!shared };
+      } catch (e) { return null; }
+    }
+  };
+</script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef } = React;
+
+/* ---- Lightweight inline icon set (replaces lucide-react for standalone use) ---- */
+function makeIcon(paths) {
+  return function Icon({ size = 16, className, style, ...rest }) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+        className={className} style={style} {...rest}
+      >
+        {paths}
+      </svg>
+    );
+  };
+}
+
+const LayoutDashboard = makeIcon(<>
+  <rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" />
+  <rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" />
+</>);
+const Package = makeIcon(<>
+  <path d="M21 8 12 3 3 8v8l9 5 9-5V8z" /><path d="M3 8l9 5 9-5" /><path d="M12 13v8" />
+</>);
+const FileText = makeIcon(<>
+  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" />
+  <path d="M8 13h8M8 17h8M8 9h2" />
+</>);
+const Users = makeIcon(<>
+  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+  <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+</>);
+const Plus = makeIcon(<path d="M12 5v14M5 12h14" />);
+const Trash2 = makeIcon(<>
+  <path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" />
+</>);
+const Pencil = makeIcon(<>
+  <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+</>);
+const Search = makeIcon(<><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.3-4.3" /></>);
+const X = makeIcon(<path d="M18 6 6 18M6 6l12 12" />);
+const AlertTriangle = makeIcon(<>
+  <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" />
+  <path d="M12 9v4" /><path d="M12 17h.01" />
+</>);
+const Printer = makeIcon(<>
+  <path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+  <rect x="6" y="14" width="12" height="8" />
+</>);
+const Save = makeIcon(<>
+  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z" />
+  <path d="M17 21v-8H7v8" /><path d="M7 3v5h8" />
+</>);
+const Loader2 = makeIcon(<path d="M21 12a9 9 0 1 1-6.219-8.56" />);
+const TrendingUp = makeIcon(<><path d="M3 17l6-6 4 4 8-8" /><path d="M17 7h4v4" /></>);
+const RotateCcw = makeIcon(<><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5" /></>);
+const CheckCircle2 = makeIcon(<><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></>);
+const Wallet = makeIcon(<>
+  <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" /><path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+  <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+</>);
+
+/* ---- Lightweight dependency-free bar chart (replaces recharts for standalone use) ---- */
+function SimpleBarChart({ data, xKey, yKey, color, height = 220, valueFormatter }) {
+  const values = data.map(d => Number(d[yKey]) || 0);
+  const max = Math.max(1, ...values);
+  const n = Math.max(1, data.length);
+  const chartH = height - 26;
+  return (
+    <div style={{ width: "100%" }}>
+      <svg viewBox={`0 0 ${n * 40} ${chartH}`} preserveAspectRatio="none" style={{ width: "100%", height: chartH, overflow: "visible" }}>
+        <line x1="0" y1={chartH - 0.5} x2={n * 40} y2={chartH - 0.5} stroke={BRAND.border} strokeWidth="1" />
+        {data.map((d, i) => {
+          const v = Number(d[yKey]) || 0;
+          const h = max > 0 ? (v / max) * (chartH - 14) : 0;
+          const x = i * 40 + 8;
+          const w = 24;
+          const y = chartH - h;
+          return (
+            <g key={i}>
+              <title>{`${d[xKey]}: ${valueFormatter ? valueFormatter(v) : v}`}</title>
+              <rect x={x} y={y} width={w} height={Math.max(h, 1)} rx="3" fill={color} />
+            </g>
+          );
+        })}
+      </svg>
+      <div style={{ display: "flex", marginTop: 6 }}>
+        {data.map((d, i) => (
+          <div key={i} style={{ flex: 1, textAlign: "center", fontSize: 10.5, color: BRAND.mutedDark }}>{d[xKey]}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+
+/* ---------------------------------------------------------
+   PEDRO MAVAKALA — Comércio e Prestação de Serviços
+   Sistema de gestão de vendas (dashboard, produtos, faturas,
+   utilizadores, controlo de stock mínimo/máximo)
+--------------------------------------------------------- */
+
+const LOGO_SRC = "data:image/jpeg;base64,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";
+
+const BRAND = {
+  bg: "#0B0E14",
+  sidebar: "#0E1320",
+  surface: "#141A26",
+  surface2: "#1B2333",
+  surface3: "#212B3D",
+  border: "rgba(255,255,255,0.08)",
+  borderStrong: "rgba(255,255,255,0.14)",
+  text: "#F3F5F9",
+  muted: "#8B93A7",
+  mutedDark: "#5B6478",
+  gold: "#F2A93B",
+  goldLight: "#FFD166",
+  blue: "#3B7DDE",
+  blueDark: "#1B4F9C",
+  success: "#34D399",
+  warning: "#FBBF24",
+  danger: "#F87171",
+};
+
+const CATEGORIAS = ["Papelaria", "Informática", "Acessórios", "Serviços"];
+
+const uid = () => Math.random().toString(36).slice(2, 10);
+
+function formatKz(n) {
+  const v = Number(n) || 0;
+  return v.toLocaleString("pt-PT", { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + " Kz";
+}
+
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function formatDatePT(iso) {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function stockStatus(p) {
+  if (p.stockAtual <= p.stockMin) return "baixo";
+  if (p.stockAtual >= p.stockMax) return "alto";
+  return "normal";
+}
+
+const STATUS_COLOR = {
+  baixo: BRAND.danger,
+  alto: BRAND.blue,
+  normal: BRAND.success,
+};
+const STATUS_LABEL = {
+  baixo: "Stock baixo",
+  alto: "Stock elevado",
+  normal: "Normal",
+};
+
+/* ---------------- Seed / demo data ---------------- */
+
+function seedProdutos() {
+  return [
+    { id: uid(), nome: "Resma de Papel A4", categoria: "Papelaria", preco: 4500, stockAtual: 42, stockMin: 10, stockMax: 100, unidade: "un" },
+    { id: uid(), nome: "Tinta Impressora HP 664", categoria: "Informática", preco: 12000, stockAtual: 6, stockMin: 8, stockMax: 30, unidade: "un" },
+    { id: uid(), nome: "Pen Drive 16GB", categoria: "Informática", preco: 6500, stockAtual: 25, stockMin: 5, stockMax: 40, unidade: "un" },
+    { id: uid(), nome: "Rato USB Óptico", categoria: "Acessórios", preco: 5000, stockAtual: 18, stockMin: 5, stockMax: 30, unidade: "un" },
+    { id: uid(), nome: "Fone de Ouvido", categoria: "Acessórios", preco: 7500, stockAtual: 44, stockMin: 5, stockMax: 40, unidade: "un" },
+    { id: uid(), nome: "Carregador USB-C", categoria: "Acessórios", preco: 8000, stockAtual: 12, stockMin: 5, stockMax: 25, unidade: "un" },
+    { id: uid(), nome: "Impressão A4 (P&B)", categoria: "Serviços", preco: 50, stockAtual: 9999, stockMin: 0, stockMax: 9999, unidade: "folha" },
+    { id: uid(), nome: "Fotocópia", categoria: "Serviços", preco: 30, stockAtual: 9999, stockMin: 0, stockMax: 9999, unidade: "folha" },
+  ];
+}
+
+function seedUsuarios() {
+  return [
+    { id: uid(), nome: "Pedro Mavakala", usuario: "pedro.mavakala", funcao: "Administrador", estado: "Ativo" },
+    { id: uid(), nome: "Ana Kiala", usuario: "ana.kiala", funcao: "Operador de Caixa", estado: "Ativo" },
+  ];
+}
+
+function seedFaturas(produtos) {
+  const p = produtos;
+  const mk = (offsetDays, numero, cliente, itensDef) => {
+    const d = new Date();
+    d.setDate(d.getDate() - offsetDays);
+    const data = d.toISOString().slice(0, 10);
+    const itens = itensDef.map(([idx, qtd]) => ({
+      produtoId: p[idx].id,
+      nome: p[idx].nome,
+      precoUnit: p[idx].preco,
+      qtd,
+      subtotal: p[idx].preco * qtd,
+    }));
+    const total = itens.reduce((s, i) => s + i.subtotal, 0);
+    return { id: uid(), numero, data, cliente, itens, total, estado: "Emitida" };
+  };
+  return [
+    mk(0, "FAT-2026-0001", "Cliente Balcão", [[0, 2], [6, 10]]),
+    mk(1, "FAT-2026-0002", "João Sacramento", [[2, 1], [3, 1]]),
+    mk(3, "FAT-2026-0003", "Cliente Balcão", [[7, 20], [4, 1]]),
+  ];
+}
+
+const STORAGE_KEY = "pm-erp-data";
+
+/* ---------------- Small UI atoms ---------------- */
+
+function Badge({ color, children }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+      style={{ background: `${color}1A`, color }}
+    >
+      <span className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+      {children}
+    </span>
+  );
+}
+
+function Card({ children, className = "", style = {} }) {
+  return (
+    <div
+      className={`rounded-2xl p-5 ${className}`}
+      style={{ background: BRAND.surface, border: `1px solid ${BRAND.border}`, ...style }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Button({ children, onClick, variant = "primary", type = "button", className = "", disabled, title }) {
+  const base = "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed";
+  const styles = {
+    primary: { background: `linear-gradient(135deg, ${BRAND.gold}, ${BRAND.goldLight})`, color: "#1A1200" },
+    secondary: { background: BRAND.surface2, color: BRAND.text, border: `1px solid ${BRAND.borderStrong}` },
+    danger: { background: "rgba(248,113,113,0.12)", color: BRAND.danger, border: `1px solid rgba(248,113,113,0.3)` },
+    ghost: { background: "transparent", color: BRAND.muted },
+  };
+  return (
+    <button type={type} title={title} disabled={disabled} onClick={onClick} className={`${base} ${className}`} style={styles[variant]}>
+      {children}
+    </button>
+  );
+}
+
+function Input({ label, ...props }) {
+  return (
+    <label className="block">
+      {label && <span className="block text-xs font-medium mb-1.5" style={{ color: BRAND.muted }}>{label}</span>}
+      <input
+        {...props}
+        className="w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
+        style={{ background: BRAND.surface2, border: `1px solid ${BRAND.borderStrong}`, color: BRAND.text }}
+      />
+    </label>
+  );
+}
+
+function Select({ label, children, ...props }) {
+  return (
+    <label className="block">
+      {label && <span className="block text-xs font-medium mb-1.5" style={{ color: BRAND.muted }}>{label}</span>}
+      <select
+        {...props}
+        className="w-full rounded-lg px-3 py-2.5 text-sm outline-none appearance-none"
+        style={{ background: BRAND.surface2, border: `1px solid ${BRAND.borderStrong}`, color: BRAND.text }}
+      >
+        {children}
+      </select>
+    </label>
+  );
+}
+
+function Modal({ title, onClose, children, wide }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.6)" }} onMouseDown={onClose}>
+      <div
+        onMouseDown={(e) => e.stopPropagation()}
+        className={`w-full ${wide ? "max-w-2xl" : "max-w-md"} rounded-2xl p-6 overflow-y-auto`}
+        style={{ background: BRAND.surface, border: `1px solid ${BRAND.borderStrong}`, maxHeight: "88vh" }}
+      >
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-lg font-bold" style={{ color: BRAND.text, fontFamily: "'Sora',sans-serif" }}>{title}</h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg" style={{ color: BRAND.muted }}>
+            <X size={18} />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* Stock gauge — signature element: current level between min/max markers */
+function StockGauge({ p, compact }) {
+  const status = stockStatus(p);
+  const max = Math.max(p.stockMax, p.stockAtual, 1);
+  const pct = Math.min(100, (p.stockAtual / max) * 100);
+  const minPct = Math.min(100, (p.stockMin / max) * 100);
+  const maxPct = Math.min(100, (p.stockMax / max) * 100);
+  return (
+    <div style={{ width: compact ? 110 : "100%" }}>
+      <div className="relative h-2 rounded-full overflow-hidden" style={{ background: BRAND.surface3 }}>
+        <div
+          className="absolute inset-y-0 left-0 rounded-full"
+          style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${BRAND.blueDark}, ${STATUS_COLOR[status]})` }}
+        />
+        <div className="absolute inset-y-0 w-px" style={{ left: `${minPct}%`, background: "rgba(255,255,255,0.5)" }} />
+        <div className="absolute inset-y-0 w-px" style={{ left: `${maxPct}%`, background: "rgba(255,255,255,0.5)" }} />
+      </div>
+      {!compact && (
+        <div className="flex justify-between mt-1.5" style={{ color: BRAND.mutedDark, fontSize: 11 }}>
+          <span>Mín {p.stockMin}</span>
+          <span>{p.stockAtual} {p.unidade}</span>
+          <span>Máx {p.stockMax}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------------- App ---------------- */
+
+function App() {
+  const [loaded, setLoaded] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const [view, setView] = useState("dashboard");
+  const [produtos, setProdutos] = useState([]);
+  const [faturas, setFaturas] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [invoiceCounter, setInvoiceCounter] = useState(1);
+
+  const [productModal, setProductModal] = useState(null); // {} new, {...} edit, null closed
+  const [invoiceModal, setInvoiceModal] = useState(false);
+  const [userModal, setUserModal] = useState(null);
+  const [printingInvoice, setPrintingInvoice] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null); // {type, id, label}
+
+  const firstLoad = useRef(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await window.storage.get(STORAGE_KEY, false);
+        if (res && res.value) {
+          const data = JSON.parse(res.value);
+          setProdutos(data.produtos || []);
+          setFaturas(data.faturas || []);
+          setUsuarios(data.usuarios || []);
+          setInvoiceCounter(data.invoiceCounter || 1);
+        } else {
+          const p = seedProdutos();
+          setProdutos(p);
+          setUsuarios(seedUsuarios());
+          setFaturas(seedFaturas(p));
+          setInvoiceCounter(4);
+        }
+      } catch (e) {
+        const p = seedProdutos();
+        setProdutos(p);
+        setUsuarios(seedUsuarios());
+        setFaturas(seedFaturas(p));
+        setInvoiceCounter(4);
+      } finally {
+        setLoaded(true);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    if (firstLoad.current) { firstLoad.current = false; return; }
+    (async () => {
+      try {
+        const payload = JSON.stringify({ produtos, faturas, usuarios, invoiceCounter });
+        const r = await window.storage.set(STORAGE_KEY, payload, false);
+        setSaveError(!r);
+      } catch (e) {
+        setSaveError(true);
+      }
+    })();
+  }, [produtos, faturas, usuarios, invoiceCounter, loaded]);
+
+  async function resetDemo() {
+    const p = seedProdutos();
+    setProdutos(p);
+    setUsuarios(seedUsuarios());
+    setFaturas(seedFaturas(p));
+    setInvoiceCounter(4);
+    setConfirmDelete(null);
+  }
+
+  /* ---------- derived dashboard data ---------- */
+  const today = todayISO();
+  const monthPrefix = today.slice(0, 7);
+
+  const vendasHoje = useMemo(() => faturas.filter(f => f.data === today).reduce((s, f) => s + f.total, 0), [faturas, today]);
+  const receitaMes = useMemo(() => faturas.filter(f => f.data.startsWith(monthPrefix)).reduce((s, f) => s + f.total, 0), [faturas, monthPrefix]);
+  const alertasStock = useMemo(() => produtos.filter(p => stockStatus(p) !== "normal"), [produtos]);
+
+  const chartData = useMemo(() => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const iso = d.toISOString().slice(0, 10);
+      const total = faturas.filter(f => f.data === iso).reduce((s, f) => s + f.total, 0);
+      days.push({ dia: iso.slice(8, 10) + "/" + iso.slice(5, 7), total });
+    }
+    return days;
+  }, [faturas]);
+
+  const topProdutos = useMemo(() => {
+    const map = {};
+    faturas.forEach(f => f.itens.forEach(it => {
+      map[it.nome] = (map[it.nome] || 0) + it.qtd;
+    }));
+    return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([nome, qtd]) => ({ nome, qtd }));
+  }, [faturas]);
+
+  /* ---------- product CRUD ---------- */
+  function saveProduct(data) {
+    if (data.id) {
+      setProdutos(prev => prev.map(p => p.id === data.id ? data : p));
+    } else {
+      setProdutos(prev => [...prev, { ...data, id: uid() }]);
+    }
+    setProductModal(null);
+  }
+  function deleteProduct(id) {
+    setProdutos(prev => prev.filter(p => p.id !== id));
+    setConfirmDelete(null);
+  }
+
+  /* ---------- user CRUD ---------- */
+  function saveUser(data) {
+    if (data.id) {
+      setUsuarios(prev => prev.map(u => u.id === data.id ? data : u));
+    } else {
+      setUsuarios(prev => [...prev, { ...data, id: uid() }]);
+    }
+    setUserModal(null);
+  }
+  function deleteUser(id) {
+    setUsuarios(prev => prev.filter(u => u.id !== id));
+    setConfirmDelete(null);
+  }
+
+  /* ---------- invoice creation ---------- */
+  function createInvoice({ cliente, itens }) {
+    const numero = `FAT-${new Date().getFullYear()}-${String(invoiceCounter).padStart(4, "0")}`;
+    const total = itens.reduce((s, i) => s + i.subtotal, 0);
+    const nova = { id: uid(), numero, data: today, cliente: cliente || "Cliente Balcão", itens, total, estado: "Emitida" };
+    setFaturas(prev => [nova, ...prev]);
+    setProdutos(prev => prev.map(p => {
+      const item = itens.find(i => i.produtoId === p.id);
+      return item ? { ...p, stockAtual: Math.max(0, p.stockAtual - item.qtd) } : p;
+    }));
+    setInvoiceCounter(c => c + 1);
+    setInvoiceModal(false);
+  }
+  function deleteInvoice(id) {
+    const inv = faturas.find(f => f.id === id);
+    if (inv) {
+      setProdutos(prev => prev.map(p => {
+        const item = inv.itens.find(i => i.produtoId === p.id);
+        return item ? { ...p, stockAtual: p.stockAtual + item.qtd } : p;
+      }));
+    }
+    setFaturas(prev => prev.filter(f => f.id !== id));
+    setConfirmDelete(null);
+  }
+
+  if (!loaded) {
+    return (
+      <div className="w-full flex items-center justify-center" style={{ background: BRAND.bg, minHeight: 600 }}>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="animate-spin" size={28} style={{ color: BRAND.gold }} />
+          <span className="text-sm" style={{ color: BRAND.muted, fontFamily: "'Inter',sans-serif" }}>A carregar dados…</span>
+        </div>
+      </div>
+    );
+  }
+
+  const NAV = [
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "produtos", label: "Produtos", icon: Package, badge: alertasStock.length || null },
+    { id: "faturas", label: "Faturas", icon: FileText },
+    { id: "usuarios", label: "Utilizadores", icon: Users },
+  ];
+
+  return (
+    <div className="w-full flex" style={{ background: BRAND.bg, fontFamily: "'Inter',sans-serif", color: BRAND.text, minHeight: 720 }}>
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          #invoice-print-area { display: block !important; position: absolute; inset: 0; background: white; color: #111; }
+        }
+        #invoice-print-area { display: none; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: ${BRAND.surface3}; border-radius: 8px; }
+        select option { background: ${BRAND.surface2}; }
+      `}</style>
+
+      {/* Sidebar */}
+      <aside className="no-print w-60 flex-shrink-0 flex flex-col" style={{ background: BRAND.sidebar, borderRight: `1px solid ${BRAND.border}` }}>
+        <div className="flex items-center gap-3 px-5 py-5" style={{ borderBottom: `1px solid ${BRAND.border}` }}>
+          <img src={LOGO_SRC} alt="Pedro Mavakala" className="w-10 h-10 rounded-lg object-cover" />
+          <div className="min-w-0">
+            <div className="text-sm font-bold truncate" style={{ fontFamily: "'Sora',sans-serif" }}>PEDRO MAVAKALA</div>
+            <div className="truncate" style={{ color: BRAND.mutedDark, fontSize: 10.5 }}>Comércio e Prest. de Serviços</div>
+          </div>
+        </div>
+
+        <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
+          {NAV.map(item => {
+            const Icon = item.icon;
+            const active = view === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setView(item.id)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors relative"
+                style={{
+                  background: active ? BRAND.surface2 : "transparent",
+                  color: active ? BRAND.goldLight : BRAND.muted,
+                  borderLeft: active ? `2px solid ${BRAND.gold}` : "2px solid transparent",
+                }}
+              >
+                <Icon size={17} />
+                {item.label}
+                {item.badge ? (
+                  <span className="ml-auto font-bold px-1.5 py-0.5 rounded-full" style={{ background: BRAND.danger, color: "#1A0000", fontSize: 10 }}>
+                    {item.badge}
+                  </span>
+                ) : null}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="px-4 py-4 flex flex-col gap-2" style={{ borderTop: `1px solid ${BRAND.border}` }}>
+          {saveError && (
+            <div className="px-2 py-1.5 rounded-lg" style={{ background: "rgba(248,113,113,0.1)", color: BRAND.danger, fontSize: 10.5 }}>
+              Falha ao guardar dados. A tentar novamente…
+            </div>
+          )}
+          <button
+            onClick={() => setConfirmDelete({ type: "reset" })}
+            className="flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors"
+            style={{ color: BRAND.mutedDark, fontSize: 11.5 }}
+          >
+            <RotateCcw size={13} /> Repor dados de exemplo
+          </button>
+          <div style={{ color: BRAND.mutedDark, fontSize: 10.5 }}>NIF: 5003247112</div>
+        </div>
+      </aside>
+
+      {/* Main */}
+      <div className="no-print flex-1 min-w-0 flex flex-col">
+        <header className="flex items-center justify-between px-8 py-5" style={{ borderBottom: `1px solid ${BRAND.border}` }}>
+          <div>
+            <h1 className="text-xl font-bold" style={{ fontFamily: "'Sora',sans-serif" }}>
+              {NAV.find(n => n.id === view)?.label}
+            </h1>
+            <p className="text-xs mt-0.5" style={{ color: BRAND.mutedDark }}>{formatDatePT(today)}</p>
+          </div>
+          {view === "produtos" && (
+            <Button onClick={() => setProductModal({})}><Plus size={16} /> Novo produto</Button>
+          )}
+          {view === "faturas" && (
+            <Button onClick={() => setInvoiceModal(true)}><Plus size={16} /> Nova fatura</Button>
+          )}
+          {view === "usuarios" && (
+            <Button onClick={() => setUserModal({})}><Plus size={16} /> Novo utilizador</Button>
+          )}
+        </header>
+
+        <main className="flex-1 overflow-y-auto px-8 py-6">
+          {view === "dashboard" && (
+            <DashboardView
+              vendasHoje={vendasHoje}
+              receitaMes={receitaMes}
+              produtos={produtos}
+              alertasStock={alertasStock}
+              chartData={chartData}
+              topProdutos={topProdutos}
+              faturas={faturas}
+              onVerFatura={setPrintingInvoice}
+              onIrProdutos={() => setView("produtos")}
+            />
+          )}
+          {view === "produtos" && (
+            <ProdutosView
+              produtos={produtos}
+              onEdit={setProductModal}
+              onDelete={(p) => setConfirmDelete({ type: "produto", id: p.id, label: p.nome })}
+            />
+          )}
+          {view === "faturas" && (
+            <FaturasView
+              faturas={faturas}
+              onVer={setPrintingInvoice}
+              onDelete={(f) => setConfirmDelete({ type: "fatura", id: f.id, label: f.numero })}
+            />
+          )}
+          {view === "usuarios" && (
+            <UsuariosView
+              usuarios={usuarios}
+              onEdit={setUserModal}
+              onDelete={(u) => setConfirmDelete({ type: "usuario", id: u.id, label: u.nome })}
+            />
+          )}
+        </main>
+      </div>
+
+      {/* Modals */}
+      {productModal !== null && (
+        <ProductModal data={productModal} onClose={() => setProductModal(null)} onSave={saveProduct} />
+      )}
+      {invoiceModal && (
+        <InvoiceModal produtos={produtos} onClose={() => setInvoiceModal(false)} onCreate={createInvoice} />
+      )}
+      {userModal !== null && (
+        <UserModal data={userModal} onClose={() => setUserModal(null)} onSave={saveUser} />
+      )}
+      {confirmDelete && (
+        <Modal title={confirmDelete.type === "reset" ? "Repor dados de exemplo" : "Confirmar eliminação"} onClose={() => setConfirmDelete(null)}>
+          <p className="text-sm mb-5" style={{ color: BRAND.muted }}>
+            {confirmDelete.type === "reset"
+              ? "Isto substitui todos os produtos, faturas e utilizadores atuais pelos dados de exemplo. Esta ação não pode ser desfeita."
+              : <>Tem a certeza que deseja eliminar <strong style={{ color: BRAND.text }}>{confirmDelete.label}</strong>? Esta ação não pode ser desfeita.</>}
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button variant="secondary" onClick={() => setConfirmDelete(null)}>Cancelar</Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                if (confirmDelete.type === "reset") resetDemo();
+                else if (confirmDelete.type === "produto") deleteProduct(confirmDelete.id);
+                else if (confirmDelete.type === "fatura") deleteInvoice(confirmDelete.id);
+                else if (confirmDelete.type === "usuario") deleteUser(confirmDelete.id);
+              }}
+            >
+              <Trash2 size={15} /> {confirmDelete.type === "reset" ? "Repor" : "Eliminar"}
+            </Button>
+          </div>
+        </Modal>
+      )}
+
+      {printingInvoice && (
+        <InvoiceViewer invoice={printingInvoice} onClose={() => setPrintingInvoice(null)} />
+      )}
+    </div>
+  );
+}
+
+/* ---------------- Dashboard ---------------- */
+
+function KpiCard({ icon: Icon, label, value, accent, sub }) {
+  return (
+    <Card>
+      <div className="flex items-start justify-between">
+        <div>
+          <div className="font-medium" style={{ color: BRAND.mutedDark, fontSize: 11.5 }}>{label}</div>
+          <div className="text-2xl font-bold mt-2" style={{ fontFamily: "'Sora',sans-serif" }}>{value}</div>
+          {sub && <div className="mt-1.5" style={{ color: BRAND.muted, fontSize: 11.5 }}>{sub}</div>}
+        </div>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${accent}1A` }}>
+          <Icon size={18} style={{ color: accent }} />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function DashboardView({ vendasHoje, receitaMes, produtos, alertasStock, chartData, topProdutos, faturas, onVerFatura, onIrProdutos }) {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <KpiCard icon={Wallet} label="Vendas hoje" value={formatKz(vendasHoje)} accent={BRAND.gold} />
+        <KpiCard icon={TrendingUp} label="Receita do mês" value={formatKz(receitaMes)} accent={BRAND.blue} />
+        <KpiCard icon={Package} label="Produtos cadastrados" value={produtos.length} accent={BRAND.success} />
+        <KpiCard
+          icon={AlertTriangle}
+          label="Alertas de stock"
+          value={alertasStock.length}
+          accent={alertasStock.length ? BRAND.danger : BRAND.mutedDark}
+          sub={alertasStock.length ? "Requer atenção" : "Tudo dentro dos limites"}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Card className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold" style={{ fontFamily: "'Sora',sans-serif" }}>Vendas — últimos 7 dias</h3>
+          </div>
+          <SimpleBarChart data={chartData} xKey="dia" yKey="total" color={BRAND.gold} height={220} valueFormatter={formatKz} />
+        </Card>
+
+        <Card>
+          <h3 className="text-sm font-bold mb-4" style={{ fontFamily: "'Sora',sans-serif" }}>Produtos mais vendidos</h3>
+          {topProdutos.length === 0 && <p className="text-xs" style={{ color: BRAND.mutedDark }}>Ainda sem vendas registadas.</p>}
+          <div className="flex flex-col gap-3">
+            {topProdutos.map((p, i) => (
+              <div key={p.nome} className="flex items-center gap-3">
+                <span className="text-xs font-mono w-5" style={{ color: BRAND.mutedDark }}>{i + 1}</span>
+                <span className="text-sm flex-1 truncate">{p.nome}</span>
+                <span className="text-xs font-semibold" style={{ color: BRAND.goldLight }}>{p.qtd}</span>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <Card className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold" style={{ fontFamily: "'Sora',sans-serif" }}>Faturas recentes</h3>
+          </div>
+          <div className="flex flex-col">
+            {faturas.slice(0, 5).map((f, idx) => (
+              <button key={f.id} onClick={() => onVerFatura(f)} className="flex items-center justify-between py-3 text-left w-full" style={idx > 0 ? { borderTop: `1px solid ${BRAND.border}` } : {}}>
+                <div>
+                  <div className="text-sm font-mono" style={{ color: BRAND.goldLight }}>{f.numero}</div>
+                  <div className="text-xs mt-0.5" style={{ color: BRAND.mutedDark }}>{f.cliente} · {formatDatePT(f.data)}</div>
+                </div>
+                <div className="text-sm font-semibold">{formatKz(f.total)}</div>
+              </button>
+            ))}
+            {faturas.length === 0 && <p className="text-xs py-3" style={{ color: BRAND.mutedDark }}>Sem faturas emitidas.</p>}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold" style={{ fontFamily: "'Sora',sans-serif" }}>Controlo de stock</h3>
+            <button onClick={onIrProdutos} className="text-xs font-medium" style={{ color: BRAND.gold }}>Ver todos</button>
+          </div>
+          <div className="flex flex-col gap-4">
+            {alertasStock.slice(0, 4).map(p => (
+              <div key={p.id}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-xs font-medium truncate">{p.nome}</span>
+                  <Badge color={STATUS_COLOR[stockStatus(p)]}>{STATUS_LABEL[stockStatus(p)]}</Badge>
+                </div>
+                <StockGauge p={p} />
+              </div>
+            ))}
+            {alertasStock.length === 0 && (
+              <div className="flex items-center gap-2 text-xs" style={{ color: BRAND.success }}>
+                <CheckCircle2 size={15} /> Todo o stock dentro dos limites definidos.
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------- Produtos ---------------- */
+
+function ProdutosView({ produtos, onEdit, onDelete }) {
+  const [q, setQ] = useState("");
+  const filtered = produtos.filter(p => p.nome.toLowerCase().includes(q.toLowerCase()) || p.categoria.toLowerCase().includes(q.toLowerCase()));
+
+  return (
+    <Card>
+      <div className="flex items-center gap-3 mb-5">
+        <div className="relative flex-1 max-w-xs">
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: BRAND.mutedDark }} />
+          <input
+            value={q} onChange={e => setQ(e.target.value)} placeholder="Pesquisar produto ou categoria…"
+            className="w-full rounded-lg pl-9 pr-3 py-2 text-sm outline-none"
+            style={{ background: BRAND.surface2, border: `1px solid ${BRAND.borderStrong}`, color: BRAND.text }}
+          />
+        </div>
+        <span className="text-xs" style={{ color: BRAND.mutedDark }}>{filtered.length} produto(s)</span>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left uppercase tracking-wide" style={{ color: BRAND.mutedDark, fontSize: 11 }}>
+              <th className="pb-3 font-medium">Produto</th>
+              <th className="pb-3 font-medium">Categoria</th>
+              <th className="pb-3 font-medium">Preço</th>
+              <th className="pb-3 font-medium w-40">Stock (mín / máx)</th>
+              <th className="pb-3 font-medium">Estado</th>
+              <th className="pb-3 font-medium text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(p => {
+              const status = stockStatus(p);
+              return (
+                <tr key={p.id} style={{ borderTop: `1px solid ${BRAND.border}` }}>
+                  <td className="py-3 font-medium">{p.nome}</td>
+                  <td className="py-3" style={{ color: BRAND.muted }}>{p.categoria}</td>
+                  <td className="py-3">{formatKz(p.preco)}</td>
+                  <td className="py-3"><StockGauge p={p} compact /></td>
+                  <td className="py-3"><Badge color={STATUS_COLOR[status]}>{STATUS_LABEL[status]}</Badge></td>
+                  <td className="py-3">
+                    <div className="flex justify-end gap-1.5">
+                      <button onClick={() => onEdit(p)} className="p-1.5 rounded-lg" style={{ color: BRAND.muted }} title="Editar"><Pencil size={15} /></button>
+                      <button onClick={() => onDelete(p)} className="p-1.5 rounded-lg" style={{ color: BRAND.danger }} title="Eliminar"><Trash2 size={15} /></button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {filtered.length === 0 && <p className="text-sm text-center py-10" style={{ color: BRAND.mutedDark }}>Nenhum produto encontrado.</p>}
+      </div>
+    </Card>
+  );
+}
+
+function ProductModal({ data, onClose, onSave }) {
+  const isEdit = !!data.id;
+  const [form, setForm] = useState({
+    id: data.id || null,
+    nome: data.nome || "",
+    categoria: data.categoria || CATEGORIAS[0],
+    preco: data.preco ?? "",
+    stockAtual: data.stockAtual ?? "",
+    stockMin: data.stockMin ?? "",
+    stockMax: data.stockMax ?? "",
+    unidade: data.unidade || "un",
+  });
+  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const valid = form.nome.trim() && form.preco !== "" && form.stockAtual !== "" && form.stockMin !== "" && form.stockMax !== "" && Number(form.stockMin) <= Number(form.stockMax);
+
+  function submit() {
+    if (!valid) return;
+    onSave({
+      ...form,
+      preco: Number(form.preco),
+      stockAtual: Number(form.stockAtual),
+      stockMin: Number(form.stockMin),
+      stockMax: Number(form.stockMax),
+    });
+  }
+
+  return (
+    <Modal title={isEdit ? "Editar produto" : "Novo produto"} onClose={onClose}>
+      <div className="flex flex-col gap-4">
+        <Input label="Nome do produto" value={form.nome} onChange={set("nome")} placeholder="Ex: Resma de Papel A4" />
+        <div className="grid grid-cols-2 gap-3">
+          <Select label="Categoria" value={form.categoria} onChange={set("categoria")}>
+            {CATEGORIAS.map(c => <option key={c} value={c}>{c}</option>)}
+          </Select>
+          <Input label="Unidade" value={form.unidade} onChange={set("unidade")} placeholder="un, folha, kg…" />
+        </div>
+        <Input label="Preço de venda (Kz)" type="number" min="0" value={form.preco} onChange={set("preco")} placeholder="0" />
+        <div className="grid grid-cols-3 gap-3">
+          <Input label="Stock atual" type="number" min="0" value={form.stockAtual} onChange={set("stockAtual")} />
+          <Input label="Stock mínimo" type="number" min="0" value={form.stockMin} onChange={set("stockMin")} />
+          <Input label="Stock máximo" type="number" min="0" value={form.stockMax} onChange={set("stockMax")} />
+        </div>
+        {Number(form.stockMin) > Number(form.stockMax) && form.stockMax !== "" && (
+          <p className="text-xs" style={{ color: BRAND.danger }}>O stock mínimo não pode ser maior que o máximo.</p>
+        )}
+        <div className="flex justify-end gap-3 mt-2">
+          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+          <Button onClick={submit} disabled={!valid}><Save size={15} /> Guardar</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+/* ---------------- Faturas ---------------- */
+
+function FaturasView({ faturas, onVer, onDelete }) {
+  return (
+    <Card>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left uppercase tracking-wide" style={{ color: BRAND.mutedDark, fontSize: 11 }}>
+              <th className="pb-3 font-medium">Nº Fatura</th>
+              <th className="pb-3 font-medium">Data</th>
+              <th className="pb-3 font-medium">Cliente</th>
+              <th className="pb-3 font-medium">Itens</th>
+              <th className="pb-3 font-medium">Total</th>
+              <th className="pb-3 font-medium text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {faturas.map(f => (
+              <tr key={f.id} style={{ borderTop: `1px solid ${BRAND.border}` }}>
+                <td className="py-3 font-mono" style={{ color: BRAND.goldLight }}>{f.numero}</td>
+                <td className="py-3" style={{ color: BRAND.muted }}>{formatDatePT(f.data)}</td>
+                <td className="py-3">{f.cliente}</td>
+                <td className="py-3" style={{ color: BRAND.muted }}>{f.itens.length} item(ns)</td>
+                <td className="py-3 font-semibold">{formatKz(f.total)}</td>
+                <td className="py-3">
+                  <div className="flex justify-end gap-1.5">
+                    <button onClick={() => onVer(f)} className="p-1.5 rounded-lg" style={{ color: BRAND.muted }} title="Ver / imprimir"><Printer size={15} /></button>
+                    <button onClick={() => onDelete(f)} className="p-1.5 rounded-lg" style={{ color: BRAND.danger }} title="Eliminar"><Trash2 size={15} /></button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {faturas.length === 0 && <p className="text-sm text-center py-10" style={{ color: BRAND.mutedDark }}>Nenhuma fatura emitida ainda.</p>}
+      </div>
+    </Card>
+  );
+}
+
+function InvoiceModal({ produtos, onClose, onCreate }) {
+  const [cliente, setCliente] = useState("");
+  const [selProduto, setSelProduto] = useState(produtos[0]?.id || "");
+  const [qtd, setQtd] = useState(1);
+  const [itens, setItens] = useState([]);
+
+  const disponivel = produtos.find(p => p.id === selProduto);
+  const jaNoCarrinho = itens.find(i => i.produtoId === selProduto)?.qtd || 0;
+  const podeAdicionar = disponivel && Number(qtd) > 0 && (jaNoCarrinho + Number(qtd)) <= disponivel.stockAtual;
+
+  function addItem() {
+    if (!podeAdicionar) return;
+    setItens(prev => {
+      const existing = prev.find(i => i.produtoId === selProduto);
+      if (existing) {
+        return prev.map(i => i.produtoId === selProduto
+          ? { ...i, qtd: i.qtd + Number(qtd), subtotal: (i.qtd + Number(qtd)) * i.precoUnit }
+          : i);
+      }
+      return [...prev, { produtoId: disponivel.id, nome: disponivel.nome, precoUnit: disponivel.preco, qtd: Number(qtd), subtotal: disponivel.preco * Number(qtd) }];
+    });
+    setQtd(1);
+  }
+  function removeItem(id) {
+    setItens(prev => prev.filter(i => i.produtoId !== id));
+  }
+
+  const total = itens.reduce((s, i) => s + i.subtotal, 0);
+
+  return (
+    <Modal title="Nova fatura" onClose={onClose} wide>
+      <div className="flex flex-col gap-4">
+        <Input label="Cliente (opcional)" value={cliente} onChange={e => setCliente(e.target.value)} placeholder="Cliente Balcão" />
+
+        <div className="grid gap-3 items-end p-4 rounded-xl" style={{ background: BRAND.surface2, gridTemplateColumns: "1fr 100px auto" }}>
+          <Select label="Produto" value={selProduto} onChange={e => setSelProduto(e.target.value)}>
+            {produtos.map(p => (
+              <option key={p.id} value={p.id} disabled={p.stockAtual <= 0}>
+                {p.nome} — {formatKz(p.preco)} ({p.stockAtual} {p.unidade} disp.)
+              </option>
+            ))}
+          </Select>
+          <Input label="Qtd" type="number" min="1" value={qtd} onChange={e => setQtd(e.target.value)} />
+          <Button onClick={addItem} disabled={!podeAdicionar}><Plus size={15} /> Adicionar</Button>
+        </div>
+        {disponivel && !podeAdicionar && Number(qtd) > 0 && (
+          <p className="text-xs -mt-2" style={{ color: BRAND.danger }}>Quantidade indisponível em stock.</p>
+        )}
+
+        <div className="rounded-xl overflow-hidden" style={{ border: `1px solid ${BRAND.border}` }}>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-left uppercase" style={{ background: BRAND.surface2, color: BRAND.mutedDark, fontSize: 11 }}>
+                <th className="px-4 py-2.5 font-medium">Produto</th>
+                <th className="px-4 py-2.5 font-medium">Qtd</th>
+                <th className="px-4 py-2.5 font-medium">Subtotal</th>
+                <th className="px-4 py-2.5 font-medium"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {itens.map(i => (
+                <tr key={i.produtoId} style={{ borderTop: `1px solid ${BRAND.border}` }}>
+                  <td className="px-4 py-2.5">{i.nome}</td>
+                  <td className="px-4 py-2.5">{i.qtd}</td>
+                  <td className="px-4 py-2.5">{formatKz(i.subtotal)}</td>
+                  <td className="px-4 py-2.5 text-right">
+                    <button onClick={() => removeItem(i.produtoId)} style={{ color: BRAND.danger }}><X size={15} /></button>
+                  </td>
+                </tr>
+              ))}
+              {itens.length === 0 && (
+                <tr><td colSpan={4} className="px-4 py-6 text-center text-xs" style={{ color: BRAND.mutedDark }}>Sem itens adicionados.</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="flex items-center justify-between pt-2">
+          <span className="text-sm font-medium" style={{ color: BRAND.muted }}>Total</span>
+          <span className="text-xl font-bold" style={{ fontFamily: "'Sora',sans-serif", color: BRAND.goldLight }}>{formatKz(total)}</span>
+        </div>
+
+        <div className="flex justify-end gap-3">
+          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+          <Button disabled={itens.length === 0} onClick={() => onCreate({ cliente, itens })}><FileText size={15} /> Emitir fatura</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function InvoiceViewer({ invoice, onClose }) {
+  useEffect(() => {
+    const onAfterPrint = () => {};
+    window.addEventListener("afterprint", onAfterPrint);
+    return () => window.removeEventListener("afterprint", onAfterPrint);
+  }, []);
+
+  return (
+    <>
+      <div className="no-print fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(0,0,0,0.6)" }} onMouseDown={onClose}>
+        <div onMouseDown={e => e.stopPropagation()} className="w-full max-w-lg rounded-2xl p-6 overflow-y-auto" style={{ background: "#FFFFFF", color: "#111", maxHeight: "88vh" }}>
+          <InvoicePaper invoice={invoice} />
+          <div className="flex justify-end gap-3 mt-5 no-print">
+            <Button variant="secondary" onClick={onClose}>Fechar</Button>
+            <Button onClick={() => window.print()}><Printer size={15} /> Imprimir</Button>
+          </div>
+        </div>
+      </div>
+      <div id="invoice-print-area">
+        <InvoicePaper invoice={invoice} />
+      </div>
+    </>
+  );
+}
+
+function InvoicePaper({ invoice }) {
+  return (
+    <div style={{ fontFamily: "'Inter',sans-serif", color: "#111", padding: 8 }}>
+      <div className="flex items-center gap-3 mb-4">
+        <img src={LOGO_SRC} alt="Logo" style={{ width: 52, height: 52, borderRadius: 8, objectFit: "cover" }} />
+        <div>
+          <div style={{ fontFamily: "'Sora',sans-serif", fontWeight: 800, fontSize: 16 }}>PEDRO MAVAKALA</div>
+          <div style={{ fontSize: 11, color: "#555" }}>Comércio e Prestação de Serviços · NIF: 5003247112</div>
+        </div>
+      </div>
+      <div style={{ borderTop: "1px solid #ddd", borderBottom: "1px solid #ddd", padding: "10px 0", margin: "10px 0", display: "flex", justifyContent: "space-between", fontSize: 12.5 }}>
+        <div>
+          <div style={{ color: "#777" }}>Fatura Nº</div>
+          <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontWeight: 600 }}>{invoice.numero}</div>
+        </div>
+        <div>
+          <div style={{ color: "#777" }}>Data</div>
+          <div style={{ fontWeight: 600 }}>{formatDatePT(invoice.data)}</div>
+        </div>
+        <div>
+          <div style={{ color: "#777" }}>Cliente</div>
+          <div style={{ fontWeight: 600 }}>{invoice.cliente}</div>
+        </div>
+      </div>
+      <table style={{ width: "100%", fontSize: 12.5, borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ textAlign: "left", color: "#777", fontSize: 10.5, textTransform: "uppercase" }}>
+            <th style={{ padding: "4px 0" }}>Produto</th>
+            <th style={{ padding: "4px 0" }}>Qtd</th>
+            <th style={{ padding: "4px 0" }}>Preço unit.</th>
+            <th style={{ padding: "4px 0", textAlign: "right" }}>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {invoice.itens.map((i, idx) => (
+            <tr key={idx} style={{ borderTop: "1px solid #eee" }}>
+              <td style={{ padding: "6px 0" }}>{i.nome}</td>
+              <td style={{ padding: "6px 0" }}>{i.qtd}</td>
+              <td style={{ padding: "6px 0" }}>{formatKz(i.precoUnit)}</td>
+              <td style={{ padding: "6px 0", textAlign: "right" }}>{formatKz(i.subtotal)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 14, borderTop: "2px solid #111", paddingTop: 10 }}>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 11, color: "#777" }}>Total a pagar</div>
+          <div style={{ fontFamily: "'Sora',sans-serif", fontWeight: 800, fontSize: 20 }}>{formatKz(invoice.total)}</div>
+        </div>
+      </div>
+      <p style={{ fontSize: 10, color: "#999", marginTop: 20, textAlign: "center" }}>Documento gerado eletronicamente — Pedro Mavakala, Comércio e Prestação de Serviços.</p>
+    </div>
+  );
+}
+
+/* ---------------- Usuários ---------------- */
+
+const FUNCOES = ["Administrador", "Operador de Caixa", "Gestor de Stock"];
+
+function UsuariosView({ usuarios, onEdit, onDelete }) {
+  return (
+    <Card>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left uppercase tracking-wide" style={{ color: BRAND.mutedDark, fontSize: 11 }}>
+              <th className="pb-3 font-medium">Nome</th>
+              <th className="pb-3 font-medium">Utilizador</th>
+              <th className="pb-3 font-medium">Função</th>
+              <th className="pb-3 font-medium">Estado</th>
+              <th className="pb-3 font-medium text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usuarios.map(u => (
+              <tr key={u.id} style={{ borderTop: `1px solid ${BRAND.border}` }}>
+                <td className="py-3 font-medium">{u.nome}</td>
+                <td className="py-3 font-mono" style={{ color: BRAND.muted }}>{u.usuario}</td>
+                <td className="py-3">{u.funcao}</td>
+                <td className="py-3"><Badge color={u.estado === "Ativo" ? BRAND.success : BRAND.mutedDark}>{u.estado}</Badge></td>
+                <td className="py-3">
+                  <div className="flex justify-end gap-1.5">
+                    <button onClick={() => onEdit(u)} className="p-1.5 rounded-lg" style={{ color: BRAND.muted }} title="Editar"><Pencil size={15} /></button>
+                    <button onClick={() => onDelete(u)} className="p-1.5 rounded-lg" style={{ color: BRAND.danger }} title="Eliminar"><Trash2 size={15} /></button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {usuarios.length === 0 && <p className="text-sm text-center py-10" style={{ color: BRAND.mutedDark }}>Nenhum utilizador cadastrado.</p>}
+      </div>
+    </Card>
+  );
+}
+
+function UserModal({ data, onClose, onSave }) {
+  const isEdit = !!data.id;
+  const [form, setForm] = useState({
+    id: data.id || null,
+    nome: data.nome || "",
+    usuario: data.usuario || "",
+    funcao: data.funcao || FUNCOES[0],
+    estado: data.estado || "Ativo",
+  });
+  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+  const valid = form.nome.trim() && form.usuario.trim();
+
+  return (
+    <Modal title={isEdit ? "Editar utilizador" : "Novo utilizador"} onClose={onClose}>
+      <div className="flex flex-col gap-4">
+        <Input label="Nome completo" value={form.nome} onChange={set("nome")} placeholder="Ex: Ana Kiala" />
+        <Input label="Nome de utilizador" value={form.usuario} onChange={set("usuario")} placeholder="ex: ana.kiala" />
+        <div className="grid grid-cols-2 gap-3">
+          <Select label="Função" value={form.funcao} onChange={set("funcao")}>
+            {FUNCOES.map(f => <option key={f} value={f}>{f}</option>)}
+          </Select>
+          <Select label="Estado" value={form.estado} onChange={set("estado")}>
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+          </Select>
+        </div>
+        <div className="flex justify-end gap-3 mt-2">
+          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+          <Button disabled={!valid} onClick={() => onSave(form)}><Save size={15} /> Guardar</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+</script>
+
+</body>
+</html>
