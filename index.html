@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Meu Gestor</title>
+<title>Meus Gastos</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f766e"><meta name="color-scheme" content="light dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Meu Gestor">
+<meta name="apple-mobile-web-app-title" content="Meus Gastos">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
 
@@ -109,7 +109,7 @@ main h2{display:flex;align-items:center;gap:8px}main h2::before{content:"";width
 </section>
 <section id="t-or" hidden>
 <div class="c"><h2>Orçamento mensal</h2><small class="m" id="ol"></small><div id="orl"></div></div>
-<div class="c"><h2>Definições e segurança</h2><button class="g" id="gp" style="width:100%;margin-bottom:8px">👤 O meu perfil</button><div class="row" style="margin-bottom:12px"><button class="g" id="cp">🔑 Alterar PIN</button><button class="g" id="bl">🔒 Bloquear agora</button></div><div class="row" style="align-items:center"><span>Moeda</span><input id="cur" style="max-width:90px"></div>
+<div class="c"><h2>Definições e segurança</h2><button class="g" id="gp" style="width:100%;margin-bottom:8px">👤 O meu perfil</button><button class="g" id="gbio" style="width:100%;margin-bottom:8px" hidden></button><div class="row" style="margin-bottom:12px"><button class="g" id="cp">🔑 Alterar PIN</button><button class="g" id="bl">🔒 Bloquear agora</button></div><div class="row" style="align-items:center"><span>Moeda</span><input id="cur" style="max-width:90px"></div>
 <p class="m" style="font-size:13px">Para levar os dados para outro aparelho: gera o backup, copia o texto e cola-o lá em “Restaurar”.</p>
 <textarea id="bk" placeholder="Backup aparece aqui / cola aqui para restaurar"></textarea>
 <div class="row" style="margin-top:8px"><button class="g" id="gb">Gerar backup</button><button id="rb">Restaurar</button></div><small class="m" id="bm"></small><button class="g" id="csv" style="width:100%;margin-top:10px">📤 Exportar tudo para CSV (Excel)</button></div>
@@ -123,12 +123,12 @@ main h2{display:flex;align-items:center;gap:8px}main h2::before{content:"";width
 <div class="row"><select id="ct"></select><select id="cd"></select></div>
 <div class="row"><input id="dt" type="date"><input id="nt" placeholder="Nota (opcional)"></div>
 <div class="row"><button class="g" id="cx">Cancelar</button><button id="sv">Guardar</button></div></div></div>
-<div id="ps" hidden>🔒 Meu Gestor</div>
+<div id="ps" hidden>🔒 Meus Gastos</div>
 <div class="md" id="cf" hidden style="z-index:60"><div class="sh"><p id="cft" style="margin:6px 0 4px;font-size:15px;line-height:1.5"></p><div class="row"><button class="g" id="cfn">Cancelar</button><button id="cfy">OK</button></div></div></div>
-<div class="lk" id="lk" hidden><div class="li"><div class="lo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a2 2 0 0 1 2 2v1.5"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H5.5A2.5 2.5 0 0 1 3 6.5"/><circle cx="16.5" cy="14" r="1.2" fill="#fff"/></svg></div><div class="br">Meu Gestor</div><h2 id="lkt"></h2><p id="lks"></p><div class="stp" id="stp"><i></i><i></i><i></i></div>
+<div class="lk" id="lk" hidden><div class="li"><div class="lo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H18a2 2 0 0 1 2 2v1.5"/><path d="M3 7.5V17a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H5.5A2.5 2.5 0 0 1 3 6.5"/><circle cx="16.5" cy="14" r="1.2" fill="#fff"/></svg></div><div class="br">Meus Gastos</div><h2 id="lkt"></h2><p id="lks"></p><div class="stp" id="stp"><i></i><i></i><i></i></div>
 <div class="lf" id="lkf"><input id="lkn" placeholder="Nome completo" maxlength="60" autocomplete="name" autocapitalize="words"><input id="lka" placeholder="Morada" maxlength="100" autocomplete="street-address"><input id="lkbi" placeholder="N.º do Bilhete de Identidade" maxlength="20" autocapitalize="characters" autocomplete="off"><input id="lke" type="email" inputmode="email" placeholder="E-mail" maxlength="80" autocomplete="email"><input id="lkp" type="tel" inputmode="tel" placeholder="Telefone" maxlength="20" autocomplete="tel" enterkeyhint="go"></div><button id="lkc">Continuar</button><input id="lko" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="Código de 6 dígitos" hidden><button id="lkv" hidden>Verificar código</button><button class="lnk" id="lkr" hidden>Reenviar código</button>
 <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div><div class="lm" id="lkm"></div><div class="pad" id="pad"></div>
-<button class="lnk" id="fg"></button></div></div>
+<button class="lnk" id="lkb" hidden>👆 Usar impressão digital</button><button class="lnk" id="fg"></button></div></div>
 <script>
 var CATS=["Alimentação","Transporte","Casa","Contas","Internet","TV a Cabo","Telefone","Saúde","Educação","Lazer","Compras","Transferências","Outros"],ICATS=["Salário","Transferência recebida","Outras entradas"],COL=["#0f766e","#2563eb","#d97706","#7c3aed","#0ea5e9","#f43f5e","#14b8a6","#dc2626","#0891b2","#db2777","#65a30d","#f59e0b","#6b7280"];
 var S={tx:[],cards:[{n:"Dinheiro",t:"Dinheiro",l:0}],cur:"Kz",bud:{}},per="m",off=0,tab="pn",eid=null;
@@ -180,7 +180,7 @@ return'<div style="margin:12px 0"><div class="row" style="align-items:center"><b
 function render(){var R=range(off),M=sum(inR(R));$("lb").textContent=R.l;
 document.querySelectorAll(".seg button").forEach(function(b){b.className=b.dataset.p==per?"on":"g"});
 document.querySelectorAll(".bn button").forEach(function(b){b.className=b.dataset.t==tab?"on":""});
-["pn","rg","ct","or","pf"].forEach(function(t){$("t-"+t).hidden=t!=tab});document.querySelector(".seg").hidden=document.querySelector(".nav").hidden=tab=="pf";
+["pn","rg","ct","or","pf"].forEach(function(t){$("t-"+t).hidden=t!=tab});document.querySelector(".seg").hidden=document.querySelector(".nav").hidden=tab=="pf";if(tab=="or")bioUI();
 if(tab=="pn")rPn(R,M);if(tab=="rg")rRg(R);if(tab=="ct")rCt(R);if(tab=="or")rOr(R)}
 function openM(x){eid=x?x.id:null;$("sms").value="";$("sm").textContent="";$("ttl").textContent=x?"Editar registo":"Novo registo";$("tp").value=x?x.t:"s";cats();$("vl").value=x?x.v:"";$("ct").value=x?x.c:$("ct").options[0].value;if(!$("ct").value)$("ct").selectedIndex=0;var cl=S.cards.map(function(c){return c.n});if(x&&cl.indexOf(x.k)<0)cl.push(x.k);$("cd").innerHTML=cl.map(function(n){return"<option>"+esc(n)+"</option>"}).join("");$("cd").value=x?x.k:S.cards[0].n;$("dt").value=x?x.d:iso(new Date());$("nt").value=x?x.n:"";$("md").hidden=false}
 function pSms(){var s=$("sms").value,m=s.match(/(?:AKZ|KZ)\s*([\d.,]*\d)/i);if(!m){$("sm").textContent=s.trim()?"Não encontrei o valor no texto.":"";return}
@@ -208,7 +208,7 @@ function Ln(x1,x2,yy){c.push("0.88 0.88 0.88 RG 0.5 w "+x1+" "+yy+" m "+x2+" "+y
 function H(t){if(y<90)np();T(40,y,t,12,1,"#0f766e");y-=8;Ln(40,555,y);y-=16}
 np();B(0,772,595,70,"#0f766e");
 var lab=R.l.charAt(0).toUpperCase()+R.l.slice(1),n=new Date();
-T(40,812,"Meu Gestor",20,1,"#ffffff");T(40,794,"Relatório de gastos · "+lab,10,0,"#ffffff");T(40,780,"Período: "+fd(R.a)+" a "+fd(R.b),9,0,"#ffffff");
+T(40,812,"Meus Gastos",20,1,"#ffffff");T(40,794,"Relatório de gastos · "+lab,10,0,"#ffffff");T(40,780,"Período: "+fd(R.a)+" a "+fd(R.b),9,0,"#ffffff");
 T(555,812,"Gerado em "+fd(iso(n))+" "+String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0"),8.5,0,"#ffffff","r");
 [["Entradas",M.i,"#16a34a"],["Saídas",M.o,"#dc2626"],["Saldo",M.i-M.o,M.i-M.o<0?"#dc2626":"#16a34a"]].forEach(function(k,j){var x=40+j*175;B(x,705,165,50,"#f1f5f4");T(x+10,737,k[0],9,0,"#6b7280");T(x+10,716,kz(k[1]),13,1,k[2])});
 y=680;H("Gastos por categoria");
@@ -223,7 +223,7 @@ function MH(){T(40,y,"Data",8.5,1,"#6b7280");T(105,y,"Descrição",8.5,1,"#6b728
 MH();if(!L.length)T(40,y,"Sem movimentos neste período.",10,0,"#6b7280");
 L.forEach(function(x){if(y<60){np();MH()}var e=x.t=="e",ds=((e&&ICATS.indexOf(x.c)<0)?"Entrada":x.c)+" · "+x.k+(x.n?" · "+x.n:"");
 T(40,y,fd(x.d),9);T(105,y,ds.slice(0,62),9);T(e?470:555,y,(e?"+":"-")+fp(x.v),9,0,e?"#16a34a":"#dc2626","r");y-=15;Ln(40,555,y+10)});
-pg.forEach(function(p,j){c=p;Ln(40,555,38);T(40,26,"Meu Gestor",8,0,"#6b7280");T(555,26,"Página "+(j+1)+" de "+pg.length,8,0,"#6b7280","r")});
+pg.forEach(function(p,j){c=p;Ln(40,555,38);T(40,26,"Meus Gastos",8,0,"#6b7280");T(555,26,"Página "+(j+1)+" de "+pg.length,8,0,"#6b7280","r")});
 var ob=[],N=pg.length,kids=[];
 for(i=0;i<N;i++)kids.push((5+i*2)+" 0 R");
 ob[1]="<</Type/Catalog/Pages 2 0 R>>";ob[2]="<</Type/Pages/Kids["+kids.join(" ")+"]/Count "+N+">>";
@@ -247,14 +247,22 @@ $("csv").onclick=csvx;
 var cfb=null;function ask(m,f,ok){$("cft").textContent=m;$("cfy").textContent=ok||"OK";cfb=f;$("cf").hidden=false}
 $("cfn").onclick=function(){$("cf").hidden=true;cfb=null};$("cfy").onclick=function(){$("cf").hidden=true;var f=cfb;cfb=null;if(f)f()};
 /* OTP por e-mail (EmailJS): preencher os 3 campos para ativar */
-var OTP={svc:"service_u12e0q9",tpl:"template_olnmacj",key:"UhSfbmHIBOuWyr31U"},otpP="reg",otpL=0,otpE="";
+var OTP={svc:"service_u12e0q9",tpl:"template_olnmacj",key:"MVIvd7IMT0tbMf78m"},otpP="reg",otpL=0,otpE="";
 function otpOn(){return!!(OTP.svc&&OTP.tpl&&OTP.key)}
 function otpSend(e,n){var P=otpP=="reg"&&S.rg?S.rg:(S.prof||{}),w=Date.now()-otpL;if(w<60000)return Promise.reject(new Error("Aguarda "+Math.ceil((60000-w)/1000)+" s para reenviar."));var a=new Uint32Array(1);crypto.getRandomValues(a);var c=String(100000+a[0]%900000);otpL=Date.now();
-return hp("otp"+c).then(function(h){return fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service_id:OTP.svc,template_id:OTP.tpl,user_id:OTP.key,template_params:{to_email:e,to_name:n||"",code:c,nome:P.nome||"",email:P.email||e,tel:P.tel||"",bi:P.bi?"****"+P.bi.slice(-4):""}})}).then(function(r){if(!r.ok)return r.text().then(function(t){throw new Error("Não foi possível enviar o e-mail: "+String(t).slice(0,80))});S.otp={h:h,t:Date.now()+600000,n:0};save()})}).catch(function(x){otpL=0;throw new Error(x instanceof TypeError?"Sem ligação. Tenta de novo.":x.message)})}
+return hp("otp"+c).then(function(h){return fetch("https://api.emailjs.com/api/v1.0/email/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({service_id:OTP.svc,template_id:OTP.tpl,user_id:OTP.key,template_params:{to_email:e,to_name:n||"",code:c,nome:P.nome||"",email:P.email||e,tel:P.tel||"",bi:P.bi?"****"+P.bi.slice(-4):""}})}).then(function(r){if(!r.ok)throw new Error("Não foi possível enviar o e-mail.");S.otp={h:h,t:Date.now()+600000,n:0};save()})}).catch(function(x){otpL=0;throw new Error(x instanceof TypeError?"Sem ligação. Tenta de novo.":x.message)})}
 function otpGo(e,n,p){otpE=e;otpP=p;$("lkm").textContent="A enviar código…";otpSend(e,n).then(function(){stage="otp";lkUI();$("lko").value="";$("lko").focus()}).catch(function(x){$("lkm").textContent=x.message})}
 $("lkv").onclick=function(){var c=$("lko").value.trim(),o=S.otp;if(!o||Date.now()>o.t){$("lkm").textContent="Código expirado. Toca em Reenviar.";return}if(o.n>=5){$("lkm").textContent="Demasiadas tentativas. Pede novo código.";return}o.n++;save();hp("otp"+c).then(function(h){if(h!==o.h){$("lkm").textContent="Código incorreto.";return}delete S.otp;if(otpP!="reset"&&S.rg){S.prof=Object.assign(S.prof||{},S.rg);S.name=S.rg.nome;S.vf=1;delete S.rg}save();stage="new";lkUI()})};
 $("lkr").onclick=function(){otpSend(otpE||(S.rg&&S.rg.email),S.name||(S.rg&&S.rg.nome)).then(function(){$("lkm").textContent="Código reenviado."}).catch(function(x){$("lkm").textContent=x.message})};
 $("lko").onkeydown=function(e){if(e.key=="Enter")$("lkv").click()};
+function b64(b){return btoa(String.fromCharCode.apply(0,new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function ub64(t){t=t.replace(/-/g,"+").replace(/_/g,"/");var r=atob(t),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
+function bioOk(){try{return window.PublicKeyCredential&&PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable?PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().catch(function(){return false}):Promise.resolve(false)}catch(e){return Promise.resolve(false)}}
+function bioAdd(){return navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:"Meus Gastos"},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:"utilizador",displayName:S.name||"Utilizador"},pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],authenticatorSelection:{authenticatorAttachment:"platform",userVerification:"required",residentKey:"discouraged"},timeout:60000}}).then(function(c){S.bio={id:b64(c.rawId)};save()})}
+function bioGet(){return navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:"public-key",id:ub64(S.bio.id),transports:["internal"]}],userVerification:"required",timeout:60000}})}
+function bioUI(){bioOk().then(function(ok){$("gbio").hidden=!ok;$("gbio").textContent=S.bio?"👆 Desativar impressão digital":"👆 Ativar impressão digital"})}
+$("gbio").onclick=function(){if(S.bio){ask("Desativar o desbloqueio por impressão digital?",function(){delete S.bio;save();bioUI();$("bm").textContent="Impressão digital desativada."},"Desativar");return}bioAdd().then(function(){bioUI();$("bm").textContent="Impressão digital ativada ✓"}).catch(function(){$("bm").textContent="Não foi possível ativar a impressão digital."})};
+$("lkb").onclick=function(){if(!S.bio)return;bioGet().then(function(){unlock()}).catch(function(){$("lkm").textContent="Impressão digital não validada. Usa o PIN."})};
 $("fab").onclick=function(){openM()};$("cx").onclick=function(){$("md").hidden=true};
 $("tp").onchange=cats;
 $("sv").onclick=function(){var v=parseFloat($("vl").value);if(!(v>0)){$("vl").focus();return}
@@ -270,8 +278,8 @@ document.querySelectorAll(".seg button").forEach(function(b){b.onclick=function(
 document.querySelectorAll(".bn button").forEach(function(b){b.onclick=function(){tab=b.dataset.t;render();scrollTo(0,0)}});
 $("pv").onclick=function(){off--;render()};$("nx").onclick=function(){off++;render()};
 $("cur").value=S.cur;$("cur").onchange=function(){S.cur=$("cur").value||"Kz";save();render()};
-$("gb").onclick=function(){var t=$("bk");var cp=Object.assign({},S);delete cp.pin;t.value=JSON.stringify(cp);t.select();dl(new Blob([t.value],{type:"application/json"}),"meus-gastos-backup-"+iso(new Date())+".json");try{navigator.clipboard.writeText(t.value);$("bm").textContent="Backup gerado e copiado."}catch(e){$("bm").textContent="Backup gerado. Copia o texto."}};
-$("rb").onclick=function(){var o;try{o=JSON.parse($("bk").value);if(!o.tx)throw 0}catch(e){$("bm").textContent="Backup inválido.";return}ask("Substituir os dados deste aparelho?",function(){var pk=S.pin,pn=S.name;S=o;S.pin=pk;if(!S.name)S.name=pn;norm();save();fill();$("cur").value=S.cur;$("bm").textContent="Restaurado!";render()},"Substituir")};
+$("gb").onclick=function(){var t=$("bk");var cp=Object.assign({},S);delete cp.pin;delete cp.bio;delete cp.otp;delete cp.rg;t.value=JSON.stringify(cp);t.select();dl(new Blob([t.value],{type:"application/json"}),"meus-gastos-backup-"+iso(new Date())+".json");try{navigator.clipboard.writeText(t.value);$("bm").textContent="Backup gerado e copiado."}catch(e){$("bm").textContent="Backup gerado. Copia o texto."}};
+$("rb").onclick=function(){var o;try{o=JSON.parse($("bk").value);if(!o.tx)throw 0}catch(e){$("bm").textContent="Backup inválido.";return}ask("Substituir os dados deste aparelho?",function(){var pk=S.pin,pn=S.name,bk=S.bio;S=o;S.pin=pk;S.bio=bk;if(!S.name)S.name=pn;norm();save();fill();$("cur").value=S.cur;$("bm").textContent="Restaurado!";render()},"Substituir")};
 var buf="",stage="in",tmp="",fails=0,lockUntil=(function(){try{return+localStorage.getItem("gastos_lk")||0}catch(e){return 0}})(),chg=false,hid=0;
 function hp(p){var t="mg:"+p;if(window.crypto&&crypto.subtle&&window.TextEncoder)return crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)).then(function(b){return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")});var h=5381;for(var i=0;i<t.length;i++)h=(h*33^t.charCodeAt(i))>>>0;return Promise.resolve("d"+h)}
 function gt(){var h=new Date().getHours();return h<12?"Bom dia":h<19?"Boa tarde":"Boa noite"}
@@ -282,8 +290,8 @@ $("lkf").hidden=$("lkc").hidden=st!="name";if(st=="name"&&S.rg)["lkn","lka","lkb
 $("lkt").textContent={name:"Bem-vindo",otp:"Confirma o e-mail",new:"Cria o teu PIN",conf:"Confirma o PIN",chk:"PIN atual","in":gt()+(nm?", "+nm:"")}[st];
 $("lks").textContent={otp:"Introduz o código de 6 dígitos enviado para "+otpE+".",name:"Preenche os teus dados. Vamos enviar um código de confirmação para o teu e-mail e depois defines um PIN de 4 dígitos.",new:"Escolhe 4 dígitos para entrar na app.",conf:"Introduz o PIN outra vez.",chk:"Introduz o PIN atual para continuar.","in":"Introduz o teu PIN para entrar."}[st];
 var sn={name:0,otp:0,new:1,conf:2}[st];$("stp").hidden=sn==null;[].forEach.call($("stp").children,function(e,i){e.className=i<=sn?"on":""});
-$("fg").textContent=chg?"Cancelar":"Esqueci-me do PIN";$("fg").hidden=!(st=="in"||chg);$("lko").hidden=$("lkv").hidden=$("lkr").hidden=st!="otp";if(st=="otp"){$("fg").textContent="Voltar";$("fg").hidden=false}}
-function lkOpen(st,c){stage=st;chg=!!c;$("lk").hidden=false;lkUI()}
+$("fg").textContent=chg?"Cancelar":"Esqueci-me do PIN";$("fg").hidden=!(st=="in"||chg);$("lko").hidden=$("lkv").hidden=$("lkr").hidden=st!="otp";$("lkb").hidden=!(st=="in"&&S.bio&&!chg);if(st=="otp"){$("fg").textContent="Voltar";$("fg").hidden=false}}
+function lkOpen(st,c){stage=st;chg=!!c;$("lk").hidden=false;lkUI();if(st=="in"&&!c&&S.bio&&!document.hidden)setTimeout(function(){$("lkb").click()},350)}
 function lkShow(){if(S.rg)otpE=S.rg.email;lkOpen(S.pin?"in":(S.prof&&S.prof.bi&&S.vf?"new":(S.rg?"otp":"name")));if(stage=="otp"&&(!S.otp||Date.now()>S.otp.t))$("lkm").textContent="Código expirado. Toca em Reenviar."}
 function unlock(){$("lk").hidden=true;buf="";fails=0;chg=false;hdr();render()}
 function shake(m){$("lkm").textContent=m;$("dots").classList.add("sk");setTimeout(function(){$("dots").classList.remove("sk");buf="";dots()},450)}
@@ -319,7 +327,8 @@ $("s1").textContent=mx?fm(mx.v):"—";$("s1c").textContent=mx?mx.c:"Maior gasto"
 var r=L.slice().sort(function(a,b){return a.d<b.d?1:a.d>b.d?-1:b.id-a.id}).slice(0,5);$("rec").innerHTML=r.length?r.map(rowc).join(""):'<small class="m">Sem movimentos neste período.</small>'}
 $("va").onclick=function(){tab="rg";render();scrollTo(0,0)};
 fill();render();hdr();lkShow();document.addEventListener("visibilitychange",function(){$("ps").hidden=!document.hidden});window.addEventListener("pagehide",function(){$("ps").hidden=false});window.addEventListener("pageshow",function(){$("ps").hidden=true});$("lkp").onkeydown=function(e){if(e.key=="Enter")$("lkc").click()};try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+function upBn(){if($("upb"))return;var d=document.createElement("div");d.id="upb";d.setAttribute("style","position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:40;background:#0f766e;color:#fff;border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 8px 24px #0004;font-size:14px");d.innerHTML="<span>✨ Nova versão disponível</span>";var b=document.createElement("button");b.textContent="Atualizar";b.setAttribute("style","background:#fff;color:#0f766e;border:0;border-radius:10px;padding:8px 14px;font-weight:700");b.onclick=function(){location.reload()};d.appendChild(b);document.body.appendChild(d)}
+if('serviceWorker' in navigator){var had=!!navigator.serviceWorker.controller;window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});navigator.serviceWorker.addEventListener('controllerchange',function(){if(had)upBn()});document.addEventListener('visibilitychange',function(){if(!document.hidden)navigator.serviceWorker.getRegistration().then(function(r){if(r)r.update()}).catch(function(){})})}
 </script>
 </body>
 </html>
